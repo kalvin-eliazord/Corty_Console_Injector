@@ -1,0 +1,10 @@
+#pragma once
+#include <iostream>
+#include <Windows.h>
+#include <vector>
+#include <TlHelp32.h>
+#include <stdlib.h>
+#include <algorithm>
+#include <filesystem>
+#include "MemManagement.h"
+#include "ConsolePrinter.h"
