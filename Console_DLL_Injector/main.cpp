@@ -11,7 +11,6 @@ int main()
 
 	std::vector<PROCESSENTRY32> procList{ MemManagement::GetProcList() };
 
-	// TO DO: there is one page to print sometimes, figure out
 	int pagesNb{ (static_cast<int>(procList.size()) / 20) };
 	int actualPage{ 1 };
 
@@ -112,6 +111,7 @@ int main()
 				pagesNb = procList.size() / 20;
 
 				ConsolePrinter::PrintIntroMsg();
+				ConsolePrinter::PrintHelpMsg();
 
 				iProc = 0;
 				maxProcess = 20;
@@ -133,6 +133,7 @@ int main()
 
 		}
 
+		// select process 
 		if (GetAsyncKeyState(VK_F6) & 1)
 		{
 			if (bScreenProcess)
@@ -161,7 +162,7 @@ int main()
 					}
 				} while (!bWorkingChoice);
 
-				// Screen 2 : DLL CHOICE
+				// switching to dll selection screen
 				bScreenProcess = false;
 				bScreenDLL = true;
 				ConsolePrinter::PrintDLL();

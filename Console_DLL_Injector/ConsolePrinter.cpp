@@ -26,7 +26,7 @@ void ConsolePrinter::PrintOutroMsg(int actualPage, int pagesNb)
 
 void ConsolePrinter::PrintProcess(int iterator, std::vector<PROCESSENTRY32> procList)
 {
-		std::wcout << "[" << iterator + 1 << "]";
+		std::wcout << "[" << iterator << "]";
 
 		if (iterator < 9)
 			std::wcout << " . ";
@@ -46,8 +46,21 @@ void ConsolePrinter::PrintDLL()
 	for (const auto& entry : fs::directory_iterator(currentDir))
 	{
 		if (entry.path().extension() == ".dll")
-			std::wcout << "[" << i << "]" << "----> " << entry.path().filename() << "\n";
+			std::wcout << "----> " << entry.path().filename() << "\n";
 
-		++i;
 	}
+}
+
+std::string ConsolePrinter::GetDLLName()
+{
+	std::string currentDir{ "./" };
+
+	int i{ 0 };
+	for (const auto& entry : fs::directory_iterator(currentDir))
+	{
+		if (entry.path().extension() == ".dll")
+			return entry.path().filename().generic_string();
+	}
+
+	return " There is no DLL in the folder! Please insert .dll files then retry. \n";
 }
