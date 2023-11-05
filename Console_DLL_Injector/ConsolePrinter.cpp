@@ -1,6 +1,5 @@
 #include "header.h"
 
-namespace fs = std::filesystem;
 
 void ConsolePrinter::PrintIntroMsg()
 {
@@ -14,7 +13,13 @@ void ConsolePrinter::PrintIntroMsg()
 
 void ConsolePrinter::PrintHelpMsg()
 {
-	std::wcout << "-------------->> (PRESS [F5] to REFRESH / [F6] to SELECT) <<---------------------- \n";
+	std::wcout << "--------------->> (PRESS [F5] to REFRESH / [F6] to SELECT) <<--------------------- \n";
+	std::wcout << "---------------------------------------------------------------------------------- \n";
+}
+
+void ConsolePrinter::PrintHelpDLLMsg()
+{
+	std::wcout << "------------------------>> (PRESS [F5] to REFRESH ) <<---------------------------- \n";
 	std::wcout << "---------------------------------------------------------------------------------- \n";
 }
 
@@ -36,31 +41,17 @@ void ConsolePrinter::PrintProcess(int iterator, std::vector<PROCESSENTRY32> proc
 		std::wcout << procList[iterator].szExeFile << " -------------> [ID]: " << procList[iterator].th32ProcessID << "\n";
 }
 
-void ConsolePrinter::PrintDLL()
+void ConsolePrinter::PrintOutroDllMsg()
 {
-	std::string currentDir{ "./" };
-
-	std::wcout << "List of DLL in the folder: \n";
-
-	int i{ 0 };
-	for (const auto& entry : fs::directory_iterator(currentDir))
-	{
-		if (entry.path().extension() == ".dll")
-			std::wcout << "----> " << entry.path().filename() << "\n";
-
-	}
+	std::wcout << "-------------------->> [PRESS F6 TO INJECT THE DLL PRINTED!] <<------------------- \n";
+	std::wcout << "---------------------------------------------------------------------------------- \n";
 }
 
-std::string ConsolePrinter::GetDLLName()
+void ConsolePrinter::PrintDLL()
 {
-	std::string currentDir{ "./" };
+	std::wstring dllName{ MemManagement::GetDLLName() };
 
-	int i{ 0 };
-	for (const auto& entry : fs::directory_iterator(currentDir))
-	{
-		if (entry.path().extension() == ".dll")
-			return entry.path().filename().generic_string();
-	}
+	std::wcout << "----- The directory contain: \n";
+	std::wcout << "-----> " << dllName << "\n";
 
-	return " There is no DLL in the folder! Please insert .dll files then retry. \n";
 }

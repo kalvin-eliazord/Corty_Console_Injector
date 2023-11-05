@@ -16,6 +16,7 @@ int main()
 
 	int iProc{ 0 };
 	int maxProcess{ 20 };
+	PROCESSENTRY32 procChoose{ NULL };
 
 	for (iProc; iProc < maxProcess; ++iProc)
 		ConsolePrinter::PrintProcess(iProc, procList);
@@ -127,8 +128,9 @@ int main()
 			if (bScreenDLL)
 			{
 				ConsolePrinter::PrintIntroMsg();
-				ConsolePrinter::PrintHelpMsg();
+				ConsolePrinter::PrintHelpDLLMsg();
 				ConsolePrinter::PrintDLL();
+				ConsolePrinter::PrintOutroDllMsg();
 			}
 
 		}
@@ -149,11 +151,16 @@ int main()
 						procNbChoice <= static_cast<int>(procList.size()))
 					{
 						ConsolePrinter::PrintIntroMsg();
-						ConsolePrinter::PrintHelpMsg();
+						ConsolePrinter::PrintHelpDLLMsg();
 						std::wcout << "------> Process: \"" << procList[procNbChoice].szExeFile << "\" - ID: "
 							<< procList[procNbChoice].th32ProcessID << " selected! \n";
 
 						bWorkingChoice = true;
+						procChoose = procList[procNbChoice];
+
+						// switching to dll selection screen
+						bScreenProcess = false;
+						bScreenDLL = true;
 					}
 					else
 					{
@@ -161,34 +168,27 @@ int main()
 						Sleep(2000);
 					}
 				} while (!bWorkingChoice);
-
-				// switching to dll selection screen
-				bScreenProcess = false;
-				bScreenDLL = true;
-				ConsolePrinter::PrintDLL();
 			}
 
 			if (bScreenDLL)
 			{
-				bool bWorkingChoice{false};
-				do
-				{
-					int dllNbChoice{};
-					std::cin >> dllNbChoice;
+				ConsolePrinter::PrintDLL();
+				ConsolePrinter::PrintOutroDllMsg();
 
-					// wrong todo adapt to nb of dll
-					if (dllNbChoice >= 0 &&
-						dllNbChoice <= static_cast<int>(procList.size()))
-					{
+				std::wstring typeF6;
+				std::wcin >> typeF6;
 
-					}
-					else
-					{
-						std::wcout << "Wrong entry, please retry. \r";
-						Sleep(2000);
-					}
-				} while (!bWorkingChoice);
+				// F6 to validate the injection of the DLL
+				//if (typeF6.("o")
+				//{
+					MemManagement::InjectDllInto(procChoose);
 
+					// print : dll injected! 
+					std::wcout << "The Dll \"" << MemManagement::GetDLLName() << "\" is loaded into " <<
+						procChoose.szExeFile << " process! \n";
+
+					Sleep(5000);
+				//}
 			}
 
 			Sleep(5);
