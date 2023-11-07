@@ -6,5 +6,7 @@
 #include <stdlib.h>
 #include <algorithm>
 #include <filesystem>
+#include <direct.h>
+#include <limits.h>
 #include "MemManagement.h"
 #include "ConsolePrinter.h"

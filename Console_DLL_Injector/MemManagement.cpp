@@ -25,10 +25,10 @@ std::vector<PROCESSENTRY32> MemManagement::GetProcList()
     return procList;
 }
 
-std::wstring MemManagement::GetDLLName()
+std::wstring MemManagement::GetDllName()
 {
     std::string currentDir{ "./" };
-    std::wstring dllName{ L" There is no DLL in the folder! Please insert .dll file then [F5]." };
+    std::wstring dllName{ L" There is no DLL in the folder! Please insert .dll file." };
 
     int i{ 0 };
     for (const auto& entry : fs::directory_iterator(currentDir))
@@ -40,12 +40,26 @@ std::wstring MemManagement::GetDLLName()
     return dllName;
 }
 
+std::wstring MemManagement::GetDllCurrDirectory()
+{
+    wchar_t buff[MAX_PATH];
+
+    _wgetcwd(buff, MAX_PATH);
+
+    std::wstring current_working_dir(buff);
+
+    return current_working_dir;
+}
+
 void MemManagement::InjectDllInto(PROCESSENTRY32 pProcess)
 {
     // setting dllPath
-    const wchar_t* dllName{ pProcess.szExeFile};
-    const char*    dllDir{ "./"};
+    std::wstring dllName{ GetDllName()};
+    std::wstring dllPath{ GetDllCurrDirectory()};
 
+    std::wstring dllComplete{ dllPath + std::wstring(L"\\" + dllName) };
+
+    std::wcout << "here: " << dllComplete << "\n";
     HANDLE hProc{ OpenProcess(PROCESS_ALL_ACCESS, 0, pProcess.th32ProcessID)};
 
     if (hProc && hProc != INVALID_HANDLE_VALUE)
@@ -55,10 +69,7 @@ void MemManagement::InjectDllInto(PROCESSENTRY32 pProcess)
 
         // writing dll Path into process
         if (memAlloc)
-        {
-            WriteProcessMemory(hProc, memAlloc, &dllDir, strlen(dllDir), nullptr);
-            WriteProcessMemory(hProc, memAlloc+2, &dllName, wcslen(dllName)+1, nullptr);
-        }
+            WriteProcessMemory(hProc, memAlloc, &dllPath, dllPath.length()+ 1, nullptr);
 
         // create remote thread to load dll into the process selected
         HANDLE remoteThread{ CreateRemoteThread(hProc, nullptr, NULL, (LPTHREAD_START_ROUTINE)LoadLibraryA, memAlloc,  NULL, nullptr) };

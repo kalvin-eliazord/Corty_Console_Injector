@@ -43,15 +43,14 @@ void ConsolePrinter::PrintProcess(int iterator, std::vector<PROCESSENTRY32> proc
 
 void ConsolePrinter::PrintOutroDllMsg()
 {
-	std::wcout << "-------------------->> [PRESS F6 TO INJECT THE DLL PRINTED!] <<------------------- \n";
+	std::wcout << "---------------------------------------------------------------------------------- \n";
 	std::wcout << "---------------------------------------------------------------------------------- \n";
 }
 
 void ConsolePrinter::PrintDLL()
 {
-	std::wstring dllName{ MemManagement::GetDLLName() };
+	std::wstring dllName{ MemManagement::GetDllName() };
 
 	std::wcout << "----- The directory contain: \n";
 	std::wcout << "-----> " << dllName << "\n";
-
 }

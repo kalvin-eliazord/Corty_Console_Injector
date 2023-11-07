@@ -136,65 +136,64 @@ int main()
 		}
 
 		// select process 
-		if (GetAsyncKeyState(VK_F6) & 1)
+		if (GetAsyncKeyState(VK_F6) & 1 && bScreenProcess)
 		{
-			if (bScreenProcess)
+			bool bWorkingChoice{ false };
+
+			do
 			{
-				bool bWorkingChoice{ false };
+				int procNbChoice{};
+				std::cin >> procNbChoice;
 
-				do
+				if (procNbChoice >= 0 &&
+					procNbChoice <= static_cast<int>(procList.size()))
 				{
-					int procNbChoice{};
-					std::cin >> procNbChoice;
+					ConsolePrinter::PrintIntroMsg();
+					ConsolePrinter::PrintHelpDLLMsg();
+					std::wcout << "------> Process: \"" << procList[procNbChoice].szExeFile << "\" - ID: "
+						<< procList[procNbChoice].th32ProcessID << " selected! \n";
 
-					if (procNbChoice >= 0 &&
-						procNbChoice <= static_cast<int>(procList.size()))
-					{
-						ConsolePrinter::PrintIntroMsg();
-						ConsolePrinter::PrintHelpDLLMsg();
-						std::wcout << "------> Process: \"" << procList[procNbChoice].szExeFile << "\" - ID: "
-							<< procList[procNbChoice].th32ProcessID << " selected! \n";
+					bWorkingChoice = true;
+					procChoose = procList[procNbChoice];
 
-						bWorkingChoice = true;
-						procChoose = procList[procNbChoice];
-
-						// switching to dll selection screen
-						bScreenProcess = false;
-						bScreenDLL = true;
-					}
-					else
-					{
-						std::wcout << "Wrong entry, please retry. \r";
-						Sleep(2000);
-					}
-				} while (!bWorkingChoice);
-			}
+					// switching to dll selection screen
+					bScreenProcess = false;
+					bScreenDLL = true;
+					ConsolePrinter::PrintDLL();
+					ConsolePrinter::PrintOutroDllMsg();
+				}
+				else
+				{
+					std::wcout << "Wrong entry, please retry. \r";
+					Sleep(2000);
+				}
+			} while (!bWorkingChoice);
+		}
 
 			if (bScreenDLL)
 			{
-				ConsolePrinter::PrintDLL();
-				ConsolePrinter::PrintOutroDllMsg();
+				std::wstring noDllFoundWord{ L"There" };
+				std::wstring dllName{ MemManagement::GetDllName() };
+				bool bNoDllFound{ dllName.find_first_of(L"T") != std::string::npos};
 
-				std::wstring typeF6;
-				std::wcin >> typeF6;
+				Sleep(5);
 
-				// F6 to validate the injection of the DLL
-				//if (typeF6.("o")
-				//{
+				if (!bNoDllFound)
+				{
+					std::wcout << dllName << "\r";
+					Sleep(10000);
+				}
+				else
+				{
 					MemManagement::InjectDllInto(procChoose);
 
 					// print : dll injected! 
-					std::wcout << "The Dll \"" << MemManagement::GetDLLName() << "\" is loaded into " <<
-						procChoose.szExeFile << " process! \n";
+					std::wcout << "The Dll \"" << MemManagement::GetDllName() << "\" is loaded into " <<
+						procChoose.szExeFile << " process! \r";
 
 					Sleep(5000);
-				//}
+				}
 			}
-
-			Sleep(5);
-		}
-
-		Sleep(20);
 	}
 
 	return 0;

@@ -2,6 +2,7 @@
 namespace MemManagement
 {
 	std::vector<PROCESSENTRY32> GetProcList();
-	std::wstring GetDLLName();
+	std::wstring GetDllName();
+	std::wstring GetDllCurrDirectory();
 	void InjectDllInto(PROCESSENTRY32 pProcess);
 };
