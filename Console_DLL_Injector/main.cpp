@@ -185,16 +185,16 @@ int main()
 				}
 				else
 				{
-					MemManagement::InjectDllInto(procChoose);
-
-					// print : dll injected! 
-					std::wcout << "The Dll \"" << MemManagement::GetDllName() << "\" is loaded into " <<
-						procChoose.szExeFile << " process! \r";
-
-					Sleep(5000);
+					break;
 				}
 			}
 	}
+
+	MemManagement::InjectDllInto(procChoose);
+
+	// print : dll injected! 
+	std::wcout << "The Dll \"" << MemManagement::GetDllName() << "\" is loaded into " <<
+		procChoose.szExeFile << " process! \r";
 
 	return 0;
 }

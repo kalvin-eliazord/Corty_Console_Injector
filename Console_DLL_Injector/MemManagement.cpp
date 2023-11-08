@@ -59,7 +59,6 @@ void MemManagement::InjectDllInto(PROCESSENTRY32 pProcess)
 
     std::wstring dllComplete{ dllPath + std::wstring(L"\\" + dllName) };
 
-    std::wcout << "here: " << dllComplete << "\n";
     HANDLE hProc{ OpenProcess(PROCESS_ALL_ACCESS, 0, pProcess.th32ProcessID)};
 
     if (hProc && hProc != INVALID_HANDLE_VALUE)
@@ -67,11 +66,16 @@ void MemManagement::InjectDllInto(PROCESSENTRY32 pProcess)
         // allocate new mem
         uintptr_t* memAlloc{ (uintptr_t*) VirtualAllocEx(hProc, NULL, MAX_PATH, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE) };
 
+        const char* dllNpath{ "C:\\Users\\kalvi\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\AssaultCube_InternalTrainer.dll" };
+
+        std::wcout << "here: " << dllComplete << "\n";
+
         // writing dll Path into process
         if (memAlloc)
-            WriteProcessMemory(hProc, memAlloc, &dllPath, dllPath.length()+ 1, nullptr);
+            WriteProcessMemory(hProc, memAlloc, &dllComplete, dllComplete.length()+ 1, nullptr);
+       // WriteProcessMemory(hProc, memAlloc, &dllNpath, strlen(dllNpath) + 1, nullptr);
 
-        // create remote thread to load dll into the process selected
+        // create remote thread to load dll into the process selected 
         HANDLE remoteThread{ CreateRemoteThread(hProc, nullptr, NULL, (LPTHREAD_START_ROUTINE)LoadLibraryA, memAlloc,  NULL, nullptr) };
 
         // closing handles

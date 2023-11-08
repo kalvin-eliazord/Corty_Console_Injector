@@ -33,11 +33,6 @@ void ConsolePrinter::PrintProcess(int iterator, std::vector<PROCESSENTRY32> proc
 {
 		std::wcout << "[" << iterator << "]";
 
-		if (iterator < 9)
-			std::wcout << " . ";
-		else
-			std::wcout << ". ";
-
 		std::wcout << procList[iterator].szExeFile << " -------------> [ID]: " << procList[iterator].th32ProcessID << "\n";
 }
 
