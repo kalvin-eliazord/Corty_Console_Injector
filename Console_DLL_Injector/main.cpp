@@ -1,200 +1,133 @@
-#include "header.h"
+#include "ConsolePrinter.h"
+#include "ScreenState.h"
+#include "MemoryUtils.h"
+#include "PagesManager.h"
+#include <cassert>
 
 int main()
 {
-	bool bScreenProcess{ true };
-	bool bScreenDLL{ false };
+	// Get process entries
+	MemoryUtils memUtils{};
+	std::vector<PROCESSENTRY32> procEntryList{ memUtils.GetProcList() };
+	assert(!procEntryList.empty() && "No process found.");
 
-	// SCREEN 1 (PROCESS LIST)
-	ConsolePrinter::PrintIntroMsg();
-	ConsolePrinter::PrintHelpMsg();
+	PagesManager pagesManager(procEntryList);
 
-	std::vector<PROCESSENTRY32> procList{ MemManagement::GetProcList() };
+	// First screen
+	ConsolePrinter::PrintHeaderProc();
+	ConsolePrinter::PrintProcess(&pagesManager);
+	ConsolePrinter::PrintFooterProc(pagesManager.GetCurrentPage(), pagesManager.GetTotalPages());
 
-	int pagesNb{ (static_cast<int>(procList.size()) / 20) };
-	int actualPage{ 1 };
-
-	int iProc{ 0 };
-	int maxProcess{ 20 };
-	PROCESSENTRY32 procChoose{ NULL };
-
-	for (iProc; iProc < maxProcess; ++iProc)
-		ConsolePrinter::PrintProcess(iProc, procList);
-
-	ConsolePrinter::PrintOutroMsg(actualPage, pagesNb);
-	
 	while (!GetAsyncKeyState(VK_DELETE) & 1)
 	{
-		// FORMER page
-		if (GetAsyncKeyState(VK_F1)& 1)
+		if (ScreenState::bScreenProcess)
 		{
-			if (bScreenProcess)
+			// PREVIOUS page
+			if (GetAsyncKeyState(VK_F1) & 1)
 			{
-				ConsolePrinter::PrintIntroMsg();
-				ConsolePrinter::PrintHelpMsg();
+				pagesManager.GoPreviousPage();
 
-				actualPage -= 1;
+				ConsolePrinter::PrintHeaderProc();
 
-				// looping to the last page.
-				if (actualPage == 0)
-					actualPage = pagesNb;
+				ConsolePrinter::PrintProcess(&pagesManager);
 
-				// list of process printed
-				maxProcess -= 20;
-				iProc -= 40;
+				ConsolePrinter::PrintFooterProc(pagesManager.GetCurrentPage(), pagesManager.GetTotalPages());
 
-				// looping to the last page.
-				if (maxProcess == 0)
-					maxProcess = procList.size();
+			} // NEXT page
+			else if (GetAsyncKeyState(VK_F2) & 1)
+			{
+				pagesManager.GoNextPage();
 
-				if (actualPage != pagesNb)
-				{
-					while (maxProcess % 10 != 0)
-						maxProcess -= 1;
-				}
+				ConsolePrinter::PrintHeaderProc();
 
-				iProc = maxProcess - 20;
+				ConsolePrinter::PrintProcess(&pagesManager);
 
-				for (iProc; iProc < maxProcess; ++iProc)
-					ConsolePrinter::PrintProcess(iProc, procList);
+				ConsolePrinter::PrintFooterProc(pagesManager.GetCurrentPage(), pagesManager.GetTotalPages());
 
-				//std::wcout << iProc <<" + " << maxProcess << "\n";
-				ConsolePrinter::PrintOutroMsg(actualPage, pagesNb);
+			} // REFRESH process entries
+			else if (GetAsyncKeyState(VK_F5) & 1)
+			{
+				PagesManager pagesManager(memUtils.GetProcList());
+
+				ConsolePrinter::PrintHeaderProc();
+
+				ConsolePrinter::PrintProcess(&pagesManager);
+
+				ConsolePrinter::PrintFooterProc(pagesManager.GetCurrentPage(), pagesManager.GetTotalPages());
+
+			} // SELECT process 
+			else if (GetAsyncKeyState(VK_F6) & 1)
+			{
+				//	bool bWorkingChoice{ false };
+
+				//	do
+				//	{
+				//		int procNbChoice{};
+				//		std::cin >> procNbChoice;
+
+				//		if (procNbChoice >= 0 &&
+				//			procNbChoice <= static_cast<int>(pagesManager.GetTotalProcess()))
+				//		{
+				//			ConsolePrinter::PrintHeaderProc();
+				//			ConsolePrinter::PrintHeaderDll();
+				//			std::wcout << "------> Process: \"" << pagesManager.GetProcNamesAndId()[procNbChoice].szExeFile << "\" - ID: "
+				//				<< pagesManager.GetProcNamesAndId()[procNbChoice].th32ProcessID << " selected! \n";
+
+				//			bWorkingChoice = true;
+				//			procChoose = pagesManager.GetProcNamesAndId()[procNbChoice];
+
+				//			// switching to dll selection screen
+				//			ScreenState::bScreenProcess = false;
+				//			ScreenState::bScreenDLL = true;
+				//			ConsolePrinter::PrintDLL();
+				//			ConsolePrinter::PrintFooterDll();
+				//		}
+				//		else
+				//		{
+				//			std::wcout << "Wrong entry, please retry. \r";
+				//			Sleep(2000);
+				//		}
+				//	} while (!bWorkingChoice);
 			}
 		}
-
-		// NEXT page
-		if (GetAsyncKeyState(VK_F2) & 1)
+		else if (ScreenState::bScreenDLL)
 		{
-			if (bScreenProcess)
-			{
-				ConsolePrinter::PrintIntroMsg();
-				ConsolePrinter::PrintHelpMsg();
+			//if (GetAsyncKeyState(VK_F5) & 1)
+			//{
+			//	if (ScreenState::bScreenDLL)
+			//	{
+			//		ConsolePrinter::PrintHeaderProc();
+			//		ConsolePrinter::PrintHeaderDll();
+			//		ConsolePrinter::PrintDLL();
+			//		ConsolePrinter::PrintFooterDll();
+			//	}
+			//}
 
-				actualPage += 1;
+			//std::wstring noDllFoundWord{ L"There" };
+			//std::wstring dllName{ memUtils.GetDllName() };
+			//bool bNoDllFound{ dllName.find_first_of(L"T") != std::string::npos };
 
-				// looping to the first page
-				if (actualPage > pagesNb)
-					actualPage = 1;
+			//Sleep(5);
 
-				// list of process printed
-				maxProcess += 20;
+			//if (!bNoDllFound)
+			//{
+			//	std::wcout << dllName << "\r";
+			//	Sleep(10000);
+			//}
+			//else
+			//{
+			//	break;
+			//}
 
-				if (maxProcess > static_cast<int>(procList.size()) && actualPage == 1)
-				{
-					maxProcess = 20;
-					iProc = 0;
-				}
+			//memUtils.InjectDllInto(pagesManager.GetProcIdChoosen());
 
-				// print maximum of process into the last page
-				if (actualPage == pagesNb)
-				{
-					maxProcess = procList.size();
-					iProc = maxProcess - 20;
-				}
-				for (iProc; iProc < maxProcess; ++iProc)
-					ConsolePrinter::PrintProcess(iProc, procList);
-
-				//std::wcout << iProc << " + " << maxProcess << "\n";
-
-				ConsolePrinter::PrintOutroMsg(actualPage, pagesNb);
-			}
+			//// print: dll injected! 
+			//std::wcout << "The Dll \"" << memUtils.GetDllName() << "\" is loaded into " <<
+			//	procChoose.szExeFile << " process! \r";
 		}
 
-		// refresh process snapshot
-		if (GetAsyncKeyState(VK_F5) & 1)
-		{
-
-			if (bScreenProcess)
-			{
-
-				procList = MemManagement::GetProcList();
-				pagesNb = procList.size() / 20;
-
-				ConsolePrinter::PrintIntroMsg();
-				ConsolePrinter::PrintHelpMsg();
-
-				iProc = 0;
-				maxProcess = 20;
-
-				for (iProc; iProc < maxProcess; ++iProc)
-					ConsolePrinter::PrintProcess(iProc, procList);
-
-				//std::wcout << iProc << " + " << maxProcess << "\n";
-
-				ConsolePrinter::PrintOutroMsg(1, pagesNb);
-			}
-
-			if (bScreenDLL)
-			{
-				ConsolePrinter::PrintIntroMsg();
-				ConsolePrinter::PrintHelpDLLMsg();
-				ConsolePrinter::PrintDLL();
-				ConsolePrinter::PrintOutroDllMsg();
-			}
-
-		}
-
-		// select process 
-		if (GetAsyncKeyState(VK_F6) & 1 && bScreenProcess)
-		{
-			bool bWorkingChoice{ false };
-
-			do
-			{
-				int procNbChoice{};
-				std::cin >> procNbChoice;
-
-				if (procNbChoice >= 0 &&
-					procNbChoice <= static_cast<int>(procList.size()))
-				{
-					ConsolePrinter::PrintIntroMsg();
-					ConsolePrinter::PrintHelpDLLMsg();
-					std::wcout << "------> Process: \"" << procList[procNbChoice].szExeFile << "\" - ID: "
-						<< procList[procNbChoice].th32ProcessID << " selected! \n";
-
-					bWorkingChoice = true;
-					procChoose = procList[procNbChoice];
-
-					// switching to dll selection screen
-					bScreenProcess = false;
-					bScreenDLL = true;
-					ConsolePrinter::PrintDLL();
-					ConsolePrinter::PrintOutroDllMsg();
-				}
-				else
-				{
-					std::wcout << "Wrong entry, please retry. \r";
-					Sleep(2000);
-				}
-			} while (!bWorkingChoice);
-		}
-
-			if (bScreenDLL)
-			{
-				std::wstring noDllFoundWord{ L"There" };
-				std::wstring dllName{ MemManagement::GetDllName() };
-				bool bNoDllFound{ dllName.find_first_of(L"T") != std::string::npos};
-
-				Sleep(5);
-
-				if (!bNoDllFound)
-				{
-					std::wcout << dllName << "\r";
-					Sleep(10000);
-				}
-				else
-				{
-					break;
-				}
-			}
+		Sleep(100);
 	}
-
-	MemManagement::InjectDllInto(procChoose);
-
-	// print : dll injected! 
-	std::wcout << "The Dll \"" << MemManagement::GetDllName() << "\" is loaded into " <<
-		procChoose.szExeFile << " process! \r";
 
 	return 0;
 }

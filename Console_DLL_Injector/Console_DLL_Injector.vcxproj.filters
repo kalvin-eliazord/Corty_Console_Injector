@@ -5,35 +5,55 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
+    <Filter Include="ConsolePrinter">
+      <UniqueIdentifier>{fd96062c-0f25-495a-8312-cfacb03fc0ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MemoryUtils">
+      <UniqueIdentifier>{53116569-591c-4c21-a8de-5b27743f464e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PageManager">
+      <UniqueIdentifier>{3dafc1bd-d9a7-433e-ab99-fa8053c6e44e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ConsoleHKeys">
+      <UniqueIdentifier>{e4c4cd52-89ec-4202-9688-cbbd233bdf62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScreenState">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MemManagement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ConsolePrinter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ConsolePrinter</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryUtils.cpp">
+      <Filter>MemoryUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="PagesManager.cpp">
+      <Filter>PageManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleHkeys.cpp">
+      <Filter>ConsoleHKeys</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="header.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MemManagement.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ScreenState.h">
+      <Filter>ScreenState</Filter>
     </ClInclude>
     <ClInclude Include="ConsolePrinter.h">
-      <Filter>Header Files</Filter>
+      <Filter>ConsolePrinter</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryUtils.h">
+      <Filter>MemoryUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="PagesManager.h">
+      <Filter>PageManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleHkeys.h">
+      <Filter>ConsoleHKeys</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
