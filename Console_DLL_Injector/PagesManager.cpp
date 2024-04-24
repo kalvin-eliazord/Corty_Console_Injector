@@ -56,7 +56,7 @@ void PagesManager::GoPreviousPage()
 	// Looping to the last page
 	currPage = (currPage < firstPage) ? totalPages : currPage;
 
-	int offset = (currPage - firstPage) * totalProcPerPage;
+	const int offset = (currPage - firstPage) * totalProcPerPage;
 	auto it = processMap.begin();
 	std::advance(it, offset);
 	procIterator = it;
@@ -99,7 +99,7 @@ void PagesManager::GoNextPage()
 	// Looping to the first page
 	currPage = (currPage > totalPages) ? firstPage : currPage;
 
-	int offset = (currPage - firstPage) * totalProcPerPage;
+	const int offset = (currPage - firstPage) * totalProcPerPage;
 	auto it = processMap.begin();
 	std::advance(it, offset);
 	procIterator = it;

@@ -15,7 +15,7 @@ public:
 	MemoryUtils();
 	void SetDllName();
 	std::string_view GetDllName();
-	bool InjectDllIntoProc(DWORD pProcId);
 	std::string GetDllCurrDirectory();
+	bool InjectDllIntoProc(DWORD pProcId);
 	std::vector<PROCESSENTRY32> GetProcList();
 };

@@ -9,7 +9,7 @@ int main()
 	// Get process entries
 	MemoryUtils memUtils{};
 	std::vector<PROCESSENTRY32> procEntryList{ memUtils.GetProcList() };
-	assert(!procEntryList.empty() && "No process found.");
+	assert(!procEntryList.empty() && "[!] No process found.");
 
 	PagesManager pagesManager(procEntryList);
 
@@ -20,13 +20,13 @@ int main()
 	{
 		if (ScreenState::bScreenProcess)
 		{
-			// PREVIOUS page
+			// PREVIOUS page process
 			if (GetAsyncKeyState(VK_F1) & 1)
 			{
 				pagesManager.GoPreviousPage();
 				ConsolePrinter::PrintProcessPage(&pagesManager);
 
-			} // NEXT page
+			} // NEXT page process
 			else if (GetAsyncKeyState(VK_F2) & 1)
 			{
 				pagesManager.GoNextPage();
@@ -66,7 +66,7 @@ int main()
 					}
 					else
 					{
-						std::cout << "Wrong entry, please retry. \r";
+						std::cout << "[!] Wrong entry, please retry. \r";
 						Sleep(2000);
 					}
 				} while (ScreenState::bStillChoosingProc);
@@ -74,7 +74,7 @@ int main()
 		}
 		else if (ScreenState::bScreenDLL)
 		{
-			// REFRESH screen
+			// REFRESH screen Dll
 			if (GetAsyncKeyState(VK_F5) & 1)
 			{
 				memUtils.SetDllName();

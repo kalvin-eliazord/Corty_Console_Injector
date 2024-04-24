@@ -93,8 +93,16 @@ bool MemoryUtils::InjectDllIntoProc(DWORD pProcId)
 
 	//std::cout << "[+] dllPath: \n" << dllPath << "\n";
 
-	WriteProcessMemory(hProc, memAlloc, dllPath.c_str(), strlen(dllPath.c_str()) + 1, nullptr);
-
+	SIZE_T bytesWritten;
+	if (!WriteProcessMemory(hProc, memAlloc, dllPath.c_str(), strlen(dllPath.c_str()) + 1, &bytesWritten)
+		|| !bytesWritten)
+	{
+		std::cerr << "[!] Failed to write process memory. Error: " << GetLastError() << "\n";
+		VirtualFreeEx(hProc, memAlloc, 0, MEM_RELEASE);
+		CloseHandle(hProc);
+		return false;
+	}
+	
 	HANDLE remoteThread{ CreateRemoteThread(hProc, nullptr, NULL, (LPTHREAD_START_ROUTINE)LoadLibraryA, memAlloc,  NULL, nullptr) };
 
 	if (!remoteThread || remoteThread == INVALID_HANDLE_VALUE)

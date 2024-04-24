@@ -27,7 +27,7 @@ void ConsolePrinter::PrintEachProcess(PagesManager* pPagesManager)
 
 	for (int i{ 0 }; i < pPagesManager->GetTotalProcPerPage(); ++i)
 	{
-		std::wcout << procIt->first << " -------------> [ID]: " << std::hex << procIt->second << "\n";
+		std::wcout << "[+]" << procIt->first << " -------------> [ID]: " << std::hex << procIt->second << "\n";
 		++procIt;
 	}
 }
@@ -63,17 +63,17 @@ void ConsolePrinter::PrintProcKeyChosen(PagesManager* pPagesManager)
 	std::wstring procKey{ pPagesManager->GetProcKeyChosen() };
 	std::map<std::wstring, DWORD> procMap{ pPagesManager->GetProcessMap() };
 
-	std::wcout << "------> Process: \"" << procKey << "\" - ID: " << std::hex << procMap[procKey] << " selected. \n";
+	std::wcout << "[+] ------> Process: \"" << procKey << "\" - ID: " << std::hex << procMap[procKey] << " selected. \n";
 }
 
 void ConsolePrinter::PrintTheDll(std::string_view pDllName)
 {
-	std::string_view dllOutput{ " No .Dll in the folder. Please insert .Dll file and REFRESH." };
+	std::string_view dllOutput{ "[!] No .Dll in the folder. Please insert .Dll file and REFRESH." };
 
 	if (!pDllName.empty()) dllOutput = pDllName;
 
-	std::cout << "------> The directory contain: \n";
-	std::cout << "------> " << dllOutput << "\n";
+	std::cout << "[+] ------> The directory contain: \n";
+	std::cout << "[+] ------> " << dllOutput << "\n";
 }
 
 void ConsolePrinter::PrintFooterDll()
@@ -84,6 +84,6 @@ void ConsolePrinter::PrintFooterDll()
 
 void ConsolePrinter::PrintDllInjected(std::wstring_view pProcKeyChosen, std::string_view pDllName)
 {
-	std::cout << "The Dll \"" << pDllName << "\" is loaded into "; std::wcout << pProcKeyChosen << " process! \r";
-	std::cout << "-->> ( [F5] to go back to process list, [F6] to go back to Dll injection) <<-- \n";
+	std::cout << "[+] The Dll \"" << pDllName << "\" is loaded into "; std::wcout << pProcKeyChosen << " process! \n";
+	std::cout << "[+] ( [F5] to go back to process list, [F6] to go back to Dll injection) <<-- \n";
 }
