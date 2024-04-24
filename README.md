@@ -13,7 +13,7 @@ A console app that will scan all process to injected into the selected one a DLL
 - F6 again to inject the DLL into the selected process
 
 ## Console Preview
-![image](https://github.com/kalvin-eliazord/Console_DLL_Injector/assets/61147281/78db7d43-6de5-46e2-bae1-8dfc17c86d82)
+![image](https://github.com/kalvin-eliazord/Console_DLL_Injector/assets/61147281/be9413b7-05e9-4169-87e9-02ced7839f24)
 
 ## Known-Issue:
 - The program write the dllPath into the process target but don't load the DLL it via the remote thread.
