@@ -85,8 +85,6 @@ int main()
 			{
 				if (memUtils.InjectDllIntoProc(pagesManager.GetProcIdChosen()))
 					ConsolePrinter::PrintDllInjected(pagesManager.GetProcKeyChosen(), memUtils.GetDllName());
-				else
-					std::cout << "Error ----------> Dll not injected.\n";
 
 				// To-do: feature to go back to proc list or dll injection screen
 			}

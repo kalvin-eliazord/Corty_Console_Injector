@@ -85,5 +85,5 @@ void ConsolePrinter::PrintFooterDll()
 void ConsolePrinter::PrintDllInjected(std::wstring_view pProcKeyChosen, std::string_view pDllName)
 {
 	std::cout << "The Dll \"" << pDllName << "\" is loaded into "; std::wcout << pProcKeyChosen << " process! \r";
-	std::cout << "-->> ( [F5] to go back to process list | [F6] to go back to Dll injection) <<-- \n";
+	std::cout << "-->> ( [F5] to go back to process list, [F6] to go back to Dll injection) <<-- \n";
 }
