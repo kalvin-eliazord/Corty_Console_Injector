@@ -139,6 +139,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MemoryUtils.cpp" />
     <ClCompile Include="PagesManager.cpp" />
+    <ClCompile Include="ScreenState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsolePrinter.h" />

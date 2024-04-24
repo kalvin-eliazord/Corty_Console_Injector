@@ -2,6 +2,8 @@
 #include "ScreenState.h"
 #include "MemoryUtils.h"
 #include "PagesManager.h"
+#include <iostream>
+#include <conio.h>
 #include <cassert>
 
 int main()
@@ -13,12 +15,14 @@ int main()
 
 	PagesManager pagesManager(procEntryList);
 
+	ScreenState screenState;
+
 	// First screen
 	ConsolePrinter::PrintProcessPage(&pagesManager);
 
 	while (!GetAsyncKeyState(VK_DELETE) & 1)
 	{
-		if (ScreenState::bScreenProcess)
+		if (screenState.bScreenProcess)
 		{
 			// PREVIOUS page process
 			if (GetAsyncKeyState(VK_F1) & 1)
@@ -41,38 +45,61 @@ int main()
 			} // SELECT process 
 			else if (GetAsyncKeyState(VK_F6) & 1)
 			{
+				screenState.bStillChoosingProc = true;
+
 				do
 				{
+					int iProcIdChosen;
+
 					std::string procIdChosen{};
 					std::cin >> procIdChosen;
 
-					// Parse the hexadecimal string as an integer
-					DWORD userProcId = std::stoi(procIdChosen, nullptr, 16);
+					bool bValidInput{ true };
 
-					if (userProcId >= 0)
+					for (char c : procIdChosen)
 					{
-						pagesManager.SetProcKeyChosen(userProcId);
-
-						if (!pagesManager.GetProcKeyChosen().empty())
-						{
-							memUtils.SetDllName();
-							ConsolePrinter::PrintDllPage(&pagesManager, memUtils.GetDllName());
-
-							//  Switching to Dll screen
-							ScreenState::bScreenProcess = false;
-							ScreenState::bScreenDLL = true;
-							ScreenState::bStillChoosingProc = false;
-						}
+						if (!isalnum(c))
+							bValidInput = false;
 					}
-					else
+
+					try
 					{
-						std::cout << "[!] Wrong entry, please retry. \r";
+						// Parse the hexadecimal string input as an integer
+						iProcIdChosen = std::stoi(procIdChosen, nullptr, 16);
+					}
+					catch (const std::invalid_argument)
+					{
+						std::cerr << "[!] Wrong entry, please retry. \r";
 						Sleep(2000);
+						bValidInput = false;
 					}
-				} while (ScreenState::bStillChoosingProc);
+					catch (const std::out_of_range&)
+					{
+						// The input string represents an integer that is outside the valid range
+						std::cerr << "[!] Invalid input. The value is outside the valid range. \r";
+						bValidInput = false;
+					}
+
+					pagesManager.SetProcKeyChosen(iProcIdChosen);
+
+					// Checking if the procId entered exist
+					if (bValidInput && !pagesManager.GetProcKeyChosen().empty())
+					{
+
+						screenState.SwitchToDllScreen();
+
+						memUtils.SetDllName();
+						ConsolePrinter::PrintDllPage(&pagesManager, memUtils.GetDllName());
+					}
+
+					// CANCEL input process
+					if (GetAsyncKeyState(VK_ESCAPE) & 1)
+						break;
+
+				} while (screenState.bStillChoosingProc);
 			}
 		}
-		else if (ScreenState::bScreenDLL)
+		else if (screenState.bScreenDLL)
 		{
 			// REFRESH screen Dll
 			if (GetAsyncKeyState(VK_F5) & 1)
@@ -86,11 +113,17 @@ int main()
 				if (memUtils.InjectDllIntoProc(pagesManager.GetProcIdChosen()))
 					ConsolePrinter::PrintDllInjected(pagesManager.GetProcKeyChosen(), memUtils.GetDllName());
 
-				// To-do: feature to go back to proc list or dll injection screen
-			}
-		}
+			} // Go BACK to process list screen
+			else if (GetAsyncKeyState(VK_F1) & 1)
+			{
+				screenState.SwitchToProcessScreen();
 
-		Sleep(5);
+				PagesManager pagesManager(memUtils.GetProcList());
+				ConsolePrinter::PrintProcessPage(&pagesManager);
+			}
+
+			Sleep(5);
+		}
 	}
 
 	return 0;

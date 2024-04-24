@@ -32,6 +32,9 @@
     <ClCompile Include="PagesManager.cpp">
       <Filter>PageManager</Filter>
     </ClCompile>
+    <ClCompile Include="ScreenState.cpp">
+      <Filter>ScreenState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ScreenState.h">

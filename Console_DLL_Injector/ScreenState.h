@@ -1,7 +1,10 @@
 #pragma once
-namespace ScreenState
+struct ScreenState
 {
-	inline bool bScreenDLL{ false };
-	inline bool bScreenProcess{ true };
-	inline bool bStillChoosingProc{ true };
-}
+	bool bScreenDLL{ false };
+	bool bScreenProcess{ true };
+	bool bStillChoosingProc;
+
+	void SwitchToDllScreen();
+	void SwitchToProcessScreen();
+};

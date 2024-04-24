@@ -6,9 +6,9 @@ void ConsolePrinter::PrintHeaderProc()
 
 	std::cout << "---------------------->> CONSOLE INJECTOR by KALVIN <<---------------------------- \n";
 	std::cout << "---------------------------------------------------------------------------------- \n";
-	std::cout << " >> /!\\ Put the DLL and the .EXE shorcut in the same folder of the injector /!\\ <<\n";
+	std::cout << "--------->> /!\\ Put the DLL into the same folder as the injector /!\\ <<--------- \n";
 	std::cout << "---------------------------------------------------------------------------------- \n";
-	std::cout << "-------------------->> ( [F5] to REFRESH | [F6] to SELECT) <<--------------------- \n";
+	std::cout << "------------------->> [ [F5] to REFRESH | [F6] to SELECT] <<---------------------- \n";
 	std::cout << "---------------------------------------------------------------------------------- \n";
 }
 
@@ -32,10 +32,12 @@ void ConsolePrinter::PrintEachProcess(PagesManager* pPagesManager)
 	}
 }
 
-void ConsolePrinter::PrintFooterProc(int pCurrPage, int pMaxPageNb)
+void ConsolePrinter::PrintFooterProc(const int pCurrPage, const int pMaxPageNb)
 {
 	std::cout << "------------------------------->> [PAGE " << pCurrPage << "/" << pMaxPageNb << "] <<---------------------------------- \n";
 	std::cout << "--------------------->> PREVIOUS page [F1] | NEXT page [F2] <<------------------- \n";
+	std::cout << "[+] INPUT: ";
+
 }
 
 void ConsolePrinter::PrintDllPage(PagesManager* pPagesManager, std::string_view pDllName)
@@ -54,7 +56,7 @@ void ConsolePrinter::PrintHeaderDll()
 	std::cout << "---------------------------------------------------------------------------------- \n";
 	std::cout << " >> /!\\ Put the DLL and the .EXE shorcut in the same folder of the injector /!\\ <<\n";
 	std::cout << "---------------------------------------------------------------------------------- \n";
-	std::cout << "-------------------->> ( [F5] to REFRESH | [F6] to INJECT) <<--------------------- \n";
+	std::cout << "------------------->> [ [F5] to REFRESH | [F6] to INJECT ] <<--------------------- \n";
 	std::cout << "---------------------------------------------------------------------------------- \n";
 }
 
@@ -80,10 +82,10 @@ void ConsolePrinter::PrintFooterDll()
 {
 	std::cout << "---------------------------------------------------------------------------------- \n";
 	std::cout << "---------------------------------------------------------------------------------- \n";
+	std::cout << "[+] ------------->> [ [F1] to go BACK to the process list ] <<-------------------- \n";
 }
 
 void ConsolePrinter::PrintDllInjected(std::wstring_view pProcKeyChosen, std::string_view pDllName)
 {
 	std::cout << "[+] The Dll \"" << pDllName << "\" is loaded into "; std::wcout << pProcKeyChosen << " process! \n";
-	std::cout << "[+] ( [F5] to go back to process list, [F6] to go back to Dll injection) <<-- \n";
 }
