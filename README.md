@@ -1,5 +1,5 @@
-# x86 Console Dll Injector
-A x86 console app that will scan all process to injected into the selected one a DLL with the LoadLibraryA Windows API function.
+# Console Dll Injector
+A console app that will scan all process to injected into the selected one a DLL with the LoadLibraryA Windows API function.
 
 ## Features
 - Go to next / previous page
@@ -22,4 +22,3 @@ A x86 console app that will scan all process to injected into the selected one a
 - Add redirection to process list after injection
 - Make program more robust
 - Implement a real UI
-- Implement modularity between x64 process injection
