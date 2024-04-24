@@ -4,24 +4,24 @@ PagesManager::PagesManager(std::vector<PROCESSENTRY32> pProcList)
 	: maxProcessNb { static_cast<int>(pProcList.size())}
 {
 	// Storing name and ID of each process
-	SetProcNamesAndId(pProcList);
+	SetProcessMap(pProcList);
 	SetProcIterator();
 	SetTotalProcess();
 }
 
-void PagesManager::SetProcNamesAndId(std::vector<PROCESSENTRY32> pProcList)
+void PagesManager::SetProcessMap(std::vector<PROCESSENTRY32> pProcList)
 {
 	if (pProcList.empty()) return;
 
 	for (auto& currProc : pProcList)
-		procNamesAndId[currProc.szExeFile] = currProc.th32ProcessID;
+		processMap[currProc.szExeFile] = currProc.th32ProcessID;
 }
 
 void PagesManager::SetTotalProcess()
 {
-	if (procNamesAndId.empty()) return;
+	if (processMap.empty()) return;
 
-	totalPages = (static_cast<int>(procNamesAndId.size()) - 1) / processPerPage;
+	totalPages = (static_cast<int>(processMap.size()) - 1) / totalProcPerPage;
 }
 
 int PagesManager::GetCurrentPage()
@@ -41,12 +41,12 @@ int PagesManager::GetTotalProcess() const
 
 int PagesManager::GetTotalProcPerPage() const
 {
-	return processPerPage;
+	return totalProcPerPage;
 }
 
-std::map<std::wstring, DWORD> PagesManager::GetProcNamesAndId()
+std::map<std::wstring, DWORD> PagesManager::GetProcessMap()
 {
-	return procNamesAndId;
+	return processMap;
 }
 
 void PagesManager::GoPreviousPage()
@@ -56,16 +56,40 @@ void PagesManager::GoPreviousPage()
 	// Looping to the last page
 	currPage = (currPage < firstPage) ? totalPages : currPage;
 
-	// Looping to the last iterator position
-	if (currPage == totalPages)
-		procIterator = procNamesAndId.end();
+	int offset = (currPage - firstPage) * totalProcPerPage;
+	auto it = processMap.begin();
+	std::advance(it, offset);
+	procIterator = it;
+}
 
-	const int distPosIt{ std::distance(procNamesAndId.begin(), procIterator) };
+DWORD PagesManager::GetProcIdChosen()
+{
+	return processMap[procKeyChosen];
+}
 
-	if(distPosIt < processPerPage)
-		std::advance(procIterator, -distPosIt);
-	else
-		std::advance(procIterator, -processPerPage);
+std::wstring_view PagesManager::GetProcKeyChosen()
+{
+	return procKeyChosen;
+}
+
+void PagesManager::SetProcKeyChosen(DWORD pIdChosen)
+{
+	procKeyChosen = FindProcKeyChosen(pIdChosen);
+}
+
+std::wstring PagesManager::FindProcKeyChosen(DWORD pIdChosen)
+{
+	auto it{ std::find_if(processMap.begin(), processMap.end(),
+		[pIdChosen](const std::pair<const std::wstring, DWORD>& entry)
+		{
+			 return entry.second == pIdChosen;
+		}) };
+
+	if (it != processMap.end())
+		return it->first;
+
+	// Return an empty string if the value is not found
+	return std::wstring();
 }
 
 void PagesManager::GoNextPage()
@@ -75,16 +99,10 @@ void PagesManager::GoNextPage()
 	// Looping to the first page
 	currPage = (currPage > totalPages) ? firstPage : currPage;
 
-	// Looping to the first iterator position
-	if (currPage == firstPage)
-		procIterator = procNamesAndId.begin();
-
-	const int distPosIt{ std::distance(procIterator, procNamesAndId.end()) };
-
-	if (distPosIt < processPerPage)
-		std::advance(procIterator, distPosIt);
-	else 
-		std::advance(procIterator, processPerPage);
+	int offset = (currPage - firstPage) * totalProcPerPage;
+	auto it = processMap.begin();
+	std::advance(it, offset);
+	procIterator = it;
 }
 
 std::map<std::wstring, DWORD>::iterator PagesManager::GetProcIterator()
@@ -94,10 +112,5 @@ std::map<std::wstring, DWORD>::iterator PagesManager::GetProcIterator()
 
 void PagesManager::SetProcIterator()
 {
-	procIterator = procNamesAndId.begin();
-}
-
-std::map<std::wstring, DWORD> PagesManager::GetCurrPageProcess()
-{
-	return std::map<std::wstring, DWORD>();
+	procIterator = processMap.begin();
 }

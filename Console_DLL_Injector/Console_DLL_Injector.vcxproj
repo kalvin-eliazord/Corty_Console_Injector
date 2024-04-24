@@ -131,14 +131,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ConsoleHkeys.cpp" />
     <ClCompile Include="ConsolePrinter.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MemoryUtils.cpp" />
     <ClCompile Include="PagesManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ConsoleHkeys.h" />
     <ClInclude Include="ConsolePrinter.h" />
     <ClInclude Include="MemoryUtils.h" />
     <ClInclude Include="PagesManager.h" />

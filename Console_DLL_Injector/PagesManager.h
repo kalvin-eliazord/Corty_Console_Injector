@@ -1,17 +1,18 @@
 #pragma once
-#include <vector>
 #include <Windows.h>
 #include <TlHelp32.h>
+#include <algorithm>
+#include <vector>
 #include <string>
 #include <map>
 
 class PagesManager
 {
 private:
-	int procIdChosen;
 	const int maxProcessNb;
-	const int processPerPage{ 21 };
-	std::map<std::wstring, DWORD> procNamesAndId;
+	std::wstring procKeyChosen;
+	const int totalProcPerPage{ 21 };
+	std::map<std::wstring, DWORD> processMap;
 
 	int totalPages;
 	const int firstPage{ 1 };
@@ -20,17 +21,20 @@ private:
 
 	void SetTotalProcess();
 	void SetProcIterator();
-	void SetProcNamesAndId(std::vector<PROCESSENTRY32> pProcList);
+	void SetProcessMap(std::vector<PROCESSENTRY32> pProcList);
+	std::wstring FindProcKeyChosen(DWORD pIdChosen);
 
 public:
 	void GoNextPage();
 	int GetTotalPages();
 	int GetCurrentPage();
 	void GoPreviousPage();
+	DWORD GetProcIdChosen();
 	int GetTotalProcess() const;
 	int GetTotalProcPerPage() const;
-	std::map<std::wstring, DWORD> GetProcNamesAndId();
-	std::map<std::wstring, DWORD> GetCurrPageProcess();
+	std::wstring_view GetProcKeyChosen();
+	void SetProcKeyChosen(DWORD pIdChosen);
+	std::map<std::wstring, DWORD> GetProcessMap();
 	PagesManager(std::vector<PROCESSENTRY32> pProcList);
 	std::map< std::wstring, DWORD>::iterator GetProcIterator();
 };

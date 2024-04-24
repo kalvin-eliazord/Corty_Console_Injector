@@ -5,16 +5,17 @@
 #include <string>
 #include <filesystem>
 #include <vector>
+#include <direct.h> 
 
 class MemoryUtils
 {
 private:
-	std::wstring dllName{ L" There is no .DLL in the folder. Please insert .DLL file" };
-	void SetDllName();
-
+	std::string dllName{""};
 public:
-	std::wstring GetDllName();
+	MemoryUtils();
+	void SetDllName();
+	std::string_view GetDllName();
+	bool InjectDllIntoProc(DWORD pProcId);
+	std::string GetDllCurrDirectory();
 	std::vector<PROCESSENTRY32> GetProcList();
-	void InjectDllIntoProc(DWORD pProcId);
-	std::wstring GetDllCurrDirectory();
 };

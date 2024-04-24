@@ -29,59 +29,72 @@ void MemoryUtils::SetDllName()
 {
     std::string currentDir{ "./" };
 
+    bool bDllNotFound{ true };
+
     for (const auto& file : fs::directory_iterator(currentDir))
     {
         if (file.path().extension() == ".dll")
         {
-            dllName = file.path().filename().generic_wstring();
+            dllName = file.path().filename().generic_string();
+            bDllNotFound = false;
             break;
         }
     }
+
+    // making name empty if no file found
+    if(bDllNotFound) dllName.clear();
 }
 
-std::wstring MemoryUtils::GetDllCurrDirectory()
+MemoryUtils::MemoryUtils()
 {
-    wchar_t pathDirBuffer[MAX_PATH];
-
-    if (!_wgetcwd(pathDirBuffer, MAX_PATH))
-        return L"Can't get current directory path.";
-
-    std::wstring currWorkingDir(pathDirBuffer);
-
-    return currWorkingDir;
-}
-
-void MemoryUtils::InjectDllIntoProc(DWORD pProcId)
-{
-    // SetDllName
     SetDllName();
+}
 
-    // SetDll path
-    std::wstring dllPath{ GetDllCurrDirectory()};
+std::string_view MemoryUtils::GetDllName()
+{
+    return dllName;
+}
 
-    std::wstring dllComplete{ dllPath + std::wstring(L"\\" + dllName) };
+std::string MemoryUtils::GetDllCurrDirectory()
+{
+    const int bufferSize{ 1024 };
+    char bufferDir[bufferSize];
+
+    if (_getcwd(bufferDir, bufferSize))
+        return bufferDir;
+
+    return "Can't get current directory path.";
+}
+
+bool MemoryUtils::InjectDllIntoProc(DWORD pProcId)
+{
+    // Set Dll path
+    std::string dllCurrDir{ GetDllCurrDirectory()};
+
+    std::string dllPath{ dllCurrDir + std::string("\\" + dllName) };
 
     HANDLE hProc{ OpenProcess(PROCESS_ALL_ACCESS, 0, pProcId)};
 
     if (hProc != INVALID_HANDLE_VALUE)
     {
-        // allocate new mem
-        uintptr_t* memAlloc{ (uintptr_t*) VirtualAllocEx(hProc, NULL, MAX_PATH, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE) };
+        // Allocate new mem
+        void* memAlloc{ VirtualAllocEx(hProc, NULL, MAX_PATH, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE) };
 
-        std::wcout << "here: " << dllComplete << "\n";
+        std::cout << "dllPath: \n" << dllPath << "\n";
 
-        // writing dll Path into process
-        if (memAlloc)
-            WriteProcessMemory(hProc, memAlloc, &dllComplete, dllComplete.length()+ 1, nullptr);
+        // Writing Dll path into process selected
+        if (!memAlloc) return false;
+        WriteProcessMemory(hProc, memAlloc, dllPath.c_str(), strlen(dllPath.c_str())+ 1, nullptr);
 
         // create remote thread to load dll into the process selected 
         HANDLE remoteThread{ CreateRemoteThread(hProc, nullptr, NULL, (LPTHREAD_START_ROUTINE)LoadLibraryA, memAlloc,  NULL, nullptr) };
 
-        // closing handles
+        if (remoteThread) CloseHandle(remoteThread);
+
         CloseHandle(hProc);
 
-        if(remoteThread)
-            CloseHandle(remoteThread);
+        return true;
     }
 
+    return false;
 }

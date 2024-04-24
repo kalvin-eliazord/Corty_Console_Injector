@@ -14,9 +14,7 @@ int main()
 	PagesManager pagesManager(procEntryList);
 
 	// First screen
-	ConsolePrinter::PrintHeaderProc();
-	ConsolePrinter::PrintProcess(&pagesManager);
-	ConsolePrinter::PrintFooterProc(pagesManager.GetCurrentPage(), pagesManager.GetTotalPages());
+	ConsolePrinter::PrintProcessPage(&pagesManager);
 
 	while (!GetAsyncKeyState(VK_DELETE) & 1)
 	{
@@ -26,107 +24,75 @@ int main()
 			if (GetAsyncKeyState(VK_F1) & 1)
 			{
 				pagesManager.GoPreviousPage();
-
-				ConsolePrinter::PrintHeaderProc();
-
-				ConsolePrinter::PrintProcess(&pagesManager);
-
-				ConsolePrinter::PrintFooterProc(pagesManager.GetCurrentPage(), pagesManager.GetTotalPages());
+				ConsolePrinter::PrintProcessPage(&pagesManager);
 
 			} // NEXT page
 			else if (GetAsyncKeyState(VK_F2) & 1)
 			{
 				pagesManager.GoNextPage();
-
-				ConsolePrinter::PrintHeaderProc();
-
-				ConsolePrinter::PrintProcess(&pagesManager);
-
-				ConsolePrinter::PrintFooterProc(pagesManager.GetCurrentPage(), pagesManager.GetTotalPages());
+				ConsolePrinter::PrintProcessPage(&pagesManager);
 
 			} // REFRESH process entries
 			else if (GetAsyncKeyState(VK_F5) & 1)
 			{
 				PagesManager pagesManager(memUtils.GetProcList());
-
-				ConsolePrinter::PrintHeaderProc();
-
-				ConsolePrinter::PrintProcess(&pagesManager);
-
-				ConsolePrinter::PrintFooterProc(pagesManager.GetCurrentPage(), pagesManager.GetTotalPages());
+				ConsolePrinter::PrintProcessPage(&pagesManager);
 
 			} // SELECT process 
 			else if (GetAsyncKeyState(VK_F6) & 1)
 			{
-				//	bool bWorkingChoice{ false };
+				do
+				{
+					std::string procIdChosen{};
+					std::cin >> procIdChosen;
 
-				//	do
-				//	{
-				//		int procNbChoice{};
-				//		std::cin >> procNbChoice;
+					// Parse the hexadecimal string as an integer
+					DWORD userProcId = std::stoi(procIdChosen, nullptr, 16);
 
-				//		if (procNbChoice >= 0 &&
-				//			procNbChoice <= static_cast<int>(pagesManager.GetTotalProcess()))
-				//		{
-				//			ConsolePrinter::PrintHeaderProc();
-				//			ConsolePrinter::PrintHeaderDll();
-				//			std::wcout << "------> Process: \"" << pagesManager.GetProcNamesAndId()[procNbChoice].szExeFile << "\" - ID: "
-				//				<< pagesManager.GetProcNamesAndId()[procNbChoice].th32ProcessID << " selected! \n";
+					if (userProcId >= 0)
+					{
+						pagesManager.SetProcKeyChosen(userProcId);
 
-				//			bWorkingChoice = true;
-				//			procChoose = pagesManager.GetProcNamesAndId()[procNbChoice];
+						if (!pagesManager.GetProcKeyChosen().empty())
+						{
+							memUtils.SetDllName();
+							ConsolePrinter::PrintDllPage(&pagesManager, memUtils.GetDllName());
 
-				//			// switching to dll selection screen
-				//			ScreenState::bScreenProcess = false;
-				//			ScreenState::bScreenDLL = true;
-				//			ConsolePrinter::PrintDLL();
-				//			ConsolePrinter::PrintFooterDll();
-				//		}
-				//		else
-				//		{
-				//			std::wcout << "Wrong entry, please retry. \r";
-				//			Sleep(2000);
-				//		}
-				//	} while (!bWorkingChoice);
+							//  Switching to Dll screen
+							ScreenState::bScreenProcess = false;
+							ScreenState::bScreenDLL = true;
+							ScreenState::bStillChoosingProc = false;
+						}
+					}
+					else
+					{
+						std::cout << "Wrong entry, please retry. \r";
+						Sleep(2000);
+					}
+				} while (ScreenState::bStillChoosingProc);
 			}
 		}
 		else if (ScreenState::bScreenDLL)
 		{
-			//if (GetAsyncKeyState(VK_F5) & 1)
-			//{
-			//	if (ScreenState::bScreenDLL)
-			//	{
-			//		ConsolePrinter::PrintHeaderProc();
-			//		ConsolePrinter::PrintHeaderDll();
-			//		ConsolePrinter::PrintDLL();
-			//		ConsolePrinter::PrintFooterDll();
-			//	}
-			//}
+			// REFRESH screen
+			if (GetAsyncKeyState(VK_F5) & 1)
+			{
+				memUtils.SetDllName();
+				ConsolePrinter::PrintDllPage(&pagesManager, memUtils.GetDllName());
 
-			//std::wstring noDllFoundWord{ L"There" };
-			//std::wstring dllName{ memUtils.GetDllName() };
-			//bool bNoDllFound{ dllName.find_first_of(L"T") != std::string::npos };
+			} // INJECT Dll
+			else if (GetAsyncKeyState(VK_F6) & 1)
+			{
+				if (memUtils.InjectDllIntoProc(pagesManager.GetProcIdChosen()))
+					ConsolePrinter::PrintDllInjected(pagesManager.GetProcKeyChosen(), memUtils.GetDllName());
+				else
+					std::cout << "Error ----------> Dll not injected.\n";
 
-			//Sleep(5);
-
-			//if (!bNoDllFound)
-			//{
-			//	std::wcout << dllName << "\r";
-			//	Sleep(10000);
-			//}
-			//else
-			//{
-			//	break;
-			//}
-
-			//memUtils.InjectDllInto(pagesManager.GetProcIdChoosen());
-
-			//// print: dll injected! 
-			//std::wcout << "The Dll \"" << memUtils.GetDllName() << "\" is loaded into " <<
-			//	procChoose.szExeFile << " process! \r";
+				// To-do: feature to go back to proc list or dll injection screen
+			}
 		}
 
-		Sleep(100);
+		Sleep(5);
 	}
 
 	return 0;

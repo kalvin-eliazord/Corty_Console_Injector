@@ -8,10 +8,14 @@
 
 namespace ConsolePrinter
 {
-	void PrintHeaderProc();
 	void PrintHeaderDll();
 	void PrintFooterDll();
-	void PrintDLL(std::wstring_view pDllName);
+	void PrintHeaderProc();
+	void PrintTheDll(std::string_view pDllName);
+	void PrintEachProcess(PagesManager* pPagesManager);
+	void PrintProcessPage(PagesManager* pPagesManager);
 	void PrintFooterProc(int pCurrPage, int pMaxPageNb);
-	void PrintProcess(PagesManager* pPagesManager);
+	void PrintProcKeyChosen(PagesManager* pPagesManager);
+	void PrintDllPage(PagesManager* pPagesManager, std::string_view pDllName);
+	void PrintDllInjected(std::wstring_view pProcKeyChosen, std::string_view pDllName);
 };

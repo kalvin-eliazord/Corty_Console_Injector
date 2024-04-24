@@ -14,9 +14,6 @@
     <Filter Include="PageManager">
       <UniqueIdentifier>{3dafc1bd-d9a7-433e-ab99-fa8053c6e44e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ConsoleHKeys">
-      <UniqueIdentifier>{e4c4cd52-89ec-4202-9688-cbbd233bdf62}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ScreenState">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
@@ -35,9 +32,6 @@
     <ClCompile Include="PagesManager.cpp">
       <Filter>PageManager</Filter>
     </ClCompile>
-    <ClCompile Include="ConsoleHkeys.cpp">
-      <Filter>ConsoleHKeys</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ScreenState.h">
@@ -51,9 +45,6 @@
     </ClInclude>
     <ClInclude Include="PagesManager.h">
       <Filter>PageManager</Filter>
-    </ClInclude>
-    <ClInclude Include="ConsoleHkeys.h">
-      <Filter>ConsoleHKeys</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
