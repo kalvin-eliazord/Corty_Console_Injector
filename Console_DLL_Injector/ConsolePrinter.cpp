@@ -8,7 +8,7 @@ void ConsolePrinter::PrintHeaderProc()
 	std::cout << "---------------------------------------------------------------------------------- \n";
 	std::cout << "--------->> /!\\ Put the DLL into the same folder as the injector /!\\ <<--------- \n";
 	std::cout << "---------------------------------------------------------------------------------- \n";
-	std::cout << "------------------->> [ [F5] to REFRESH | [F6] to SELECT] <<---------------------- \n";
+	std::cout << "-------------->> [ [F5] to REFRESH | [F6] to SELECT or cancel ] <<---------------- \n";
 	std::cout << "---------------------------------------------------------------------------------- \n";
 }
 
@@ -40,11 +40,53 @@ void ConsolePrinter::PrintFooterProc(const int pCurrPage, const int pMaxPageNb)
 
 }
 
+bool ConsolePrinter::GetUserInput(PagesManager* pPagesManager)
+{
+	int iProcIdChosen;
+
+	std::string procIdChosen{};
+	std::cin >> procIdChosen;
+
+	bool bValidInput{ true };
+
+	for (char c : procIdChosen)
+	{
+		if (!isalnum(c))
+			bValidInput = false;
+	}
+
+	try
+	{
+		// Parse the hexadecimal string input as an integer
+		iProcIdChosen = std::stoi(procIdChosen, nullptr, 16);
+	}
+	catch (const std::invalid_argument)
+	{
+		std::cerr << "[!] Wrong entry, please retry. \r";
+		Sleep(2000);
+		bValidInput = false;
+	}
+	catch (const std::out_of_range&)
+	{
+		// The input string represents an integer that is outside the valid range
+		std::cerr << "[!] Invalid input. The value is outside the valid range. \r";
+		bValidInput = false;
+	}
+
+	pPagesManager->SetProcKeyChosen(iProcIdChosen);
+
+	// Checking if the procId entered exist
+	if (bValidInput && !pPagesManager->GetProcKeyChosen().empty())
+		return true;
+
+	return false;
+}
+
 void ConsolePrinter::PrintDllPage(PagesManager* pPagesManager, std::string_view pDllName)
 {
 	PrintHeaderDll();
 	PrintProcKeyChosen(pPagesManager);
-	PrintTheDll(pDllName);
+	PrintDll(pDllName);
 	PrintFooterDll();
 }
 
@@ -68,7 +110,7 @@ void ConsolePrinter::PrintProcKeyChosen(PagesManager* pPagesManager)
 	std::wcout << "[+] ------> Process: \"" << procKey << "\" - ID: " << std::hex << procMap[procKey] << " selected. \n";
 }
 
-void ConsolePrinter::PrintTheDll(std::string_view pDllName)
+void ConsolePrinter::PrintDll(std::string_view pDllName)
 {
 	std::string_view dllOutput{ "[!] No .Dll in the folder. Please insert .Dll file and REFRESH." };
 

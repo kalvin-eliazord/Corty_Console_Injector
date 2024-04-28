@@ -14,7 +14,6 @@ int main()
 	assert(!procEntryList.empty() && "[!] No process found.");
 
 	PagesManager pagesManager(procEntryList);
-
 	ScreenState screenState;
 
 	// First screen
@@ -49,51 +48,15 @@ int main()
 
 				do
 				{
-					int iProcIdChosen;
-
-					std::string procIdChosen{};
-					std::cin >> procIdChosen;
-
-					bool bValidInput{ true };
-
-					for (char c : procIdChosen)
+					if(ConsolePrinter::GetUserInput(&pagesManager))
 					{
-						if (!isalnum(c))
-							bValidInput = false;
-					}
-
-					try
-					{
-						// Parse the hexadecimal string input as an integer
-						iProcIdChosen = std::stoi(procIdChosen, nullptr, 16);
-					}
-					catch (const std::invalid_argument)
-					{
-						std::cerr << "[!] Wrong entry, please retry. \r";
-						Sleep(2000);
-						bValidInput = false;
-					}
-					catch (const std::out_of_range&)
-					{
-						// The input string represents an integer that is outside the valid range
-						std::cerr << "[!] Invalid input. The value is outside the valid range. \r";
-						bValidInput = false;
-					}
-
-					pagesManager.SetProcKeyChosen(iProcIdChosen);
-
-					// Checking if the procId entered exist
-					if (bValidInput && !pagesManager.GetProcKeyChosen().empty())
-					{
-
 						screenState.SwitchToDllScreen();
-
 						memUtils.SetDllName();
 						ConsolePrinter::PrintDllPage(&pagesManager, memUtils.GetDllName());
 					}
 
 					// CANCEL input process
-					if (GetAsyncKeyState(VK_ESCAPE) & 1)
+					if (GetAsyncKeyState(VK_F6) & 1)
 						break;
 
 				} while (screenState.bStillChoosingProc);
