@@ -4,7 +4,7 @@ void ScreenState::SwitchToDllScreen()
 {
 	bScreenProcess = false;
 	bScreenDLL = true;
-	bStillChoosingProc = false;
+	bValidInput = true;
 }
 
 void ScreenState::SwitchToProcessScreen()

@@ -4,14 +4,19 @@
 #include "PagesManager.h"
 #include <iostream>
 #include <conio.h>
-#include <cassert>
 
 int main()
 {
 	// Get process entries
 	MemoryUtils memUtils{};
 	std::vector<PROCESSENTRY32> procEntryList{ memUtils.GetProcList() };
-	assert(!procEntryList.empty() && "[!] No process found.");
+
+	if (procEntryList.empty())
+	{
+		std::cerr << "[!] No process found.";
+		Sleep(5000);
+		return -1;
+	} 
 
 	PagesManager pagesManager(procEntryList);
 	ScreenState screenState;
@@ -44,7 +49,7 @@ int main()
 			} // SELECT process 
 			else if (GetAsyncKeyState(VK_F6) & 1)
 			{
-				screenState.bStillChoosingProc = true;
+				screenState.bValidInput = false;
 
 				do
 				{
@@ -56,10 +61,10 @@ int main()
 					}
 
 					// CANCEL input process
-					if (GetAsyncKeyState(VK_F6) & 1)
+					if (GetAsyncKeyState(VK_ESCAPE) & 1)
 						break;
 
-				} while (screenState.bStillChoosingProc);
+				} while (!screenState.bValidInput);
 			}
 		}
 		else if (screenState.bScreenDLL)

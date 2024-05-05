@@ -42,44 +42,42 @@ void ConsolePrinter::PrintFooterProc(const int pCurrPage, const int pMaxPageNb)
 
 bool ConsolePrinter::GetUserInput(PagesManager* pPagesManager)
 {
-	int iProcIdChosen;
+	std::string procId_input{};
+	std::cin >> procId_input;
 
-	std::string procIdChosen{};
-	std::cin >> procIdChosen;
-
-	bool bValidInput{ true };
-
-	for (char c : procIdChosen)
+	// Input error check
+	if (!std::cin.eof() && std::cin.peek() != '\n')
 	{
-		if (!isalnum(c))
-			bValidInput = false;
+		std::cerr << "[!] Wrong entry. \r";
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+		return false;
 	}
+
+	int iProcId_input;
 
 	try
 	{
-		// Parse the hexadecimal string input as an integer
-		iProcIdChosen = std::stoi(procIdChosen, nullptr, 16);
+		// Parse the (hexadecimal) string input as an integer
+		iProcId_input = std::stoi(procId_input, nullptr, 16);
 	}
 	catch (const std::invalid_argument)
 	{
-		std::cerr << "[!] Wrong entry, please retry. \r";
-		Sleep(2000);
-		bValidInput = false;
+		std::cerr << "[!] Wrong entry. \r";
+		return false;
 	}
 	catch (const std::out_of_range&)
 	{
-		// The input string represents an integer that is outside the valid range
-		std::cerr << "[!] Invalid input. The value is outside the valid range. \r";
-		bValidInput = false;
+		std::cerr << "[!] The value is outside the valid range. \r";
+		return false;
 	}
 
-	pPagesManager->SetProcKeyChosen(iProcIdChosen);
+	pPagesManager->SetProcKeyChosen(iProcId_input);
 
 	// Checking if the procId entered exist
-	if (bValidInput && !pPagesManager->GetProcKeyChosen().empty())
-		return true;
+	if (pPagesManager->GetProcKeyChosen().empty())
+		return false;
 
-	return false;
+	return true;
 }
 
 void ConsolePrinter::PrintDllPage(PagesManager* pPagesManager, std::string_view pDllName)

@@ -1,10 +1,12 @@
 #pragma once
 #include <Windows.h>
 #include <iostream>
-#include <algorithm>
 #include <map>
 #include "MemoryUtils.h"
 #include "PagesManager.h"
+// Undefine max macro
+#undef max
+#include <limits>
 
 namespace ConsolePrinter
 {

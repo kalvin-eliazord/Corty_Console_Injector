@@ -3,7 +3,7 @@ struct ScreenState
 {
 	bool bScreenDLL{ false };
 	bool bScreenProcess{ true };
-	bool bStillChoosingProc;
+	bool bValidInput;
 
 	void SwitchToDllScreen();
 	void SwitchToProcessScreen();
