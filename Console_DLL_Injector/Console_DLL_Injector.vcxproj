@@ -140,13 +140,13 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MemoryUtils.cpp" />
     <ClCompile Include="PagesManager.cpp" />
-    <ClCompile Include="ScreenState.cpp" />
+    <ClCompile Include="ScreenManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsolePrinter.h" />
     <ClInclude Include="MemoryUtils.h" />
     <ClInclude Include="PagesManager.h" />
-    <ClInclude Include="ScreenState.h" />
+    <ClInclude Include="ScreenManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

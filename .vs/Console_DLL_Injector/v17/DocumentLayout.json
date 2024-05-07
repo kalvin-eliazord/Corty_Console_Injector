@@ -7,8 +7,12 @@
       "RelativeMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|solutionrelative:Console_DLL_Injector\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\ScreenState.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|solutionrelative:Console_DLL_Injector\\ScreenState.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\ScreenManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|solutionrelative:Console_DLL_Injector\\ScreenManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\ScreenManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|solutionrelative:Console_DLL_Injector\\ScreenManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\PagesManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -23,18 +27,8 @@
       "RelativeMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|solutionrelative:Console_DLL_Injector\\ConsolePrinter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|C:\\PROGRAM FILES (X86)\\WINDOWS KITS\\10\\INCLUDE\\10.0.22621.0\\SHARED\\MINWINDEF.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|C:\\PROGRAM FILES (X86)\\WINDOWS KITS\\10\\INCLUDE\\10.0.22621.0\\UM\\WINDOWS.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\PagesManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|solutionrelative:Console_DLL_Injector\\PagesManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\ScreenState.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|solutionrelative:Console_DLL_Injector\\ScreenState.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2F08785-71B8-474E-9F9A-E8AA168C69E5}|Console_DLL_Injector\\Console_DLL_Injector.vcxproj|C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\MemoryUtils.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -58,6 +52,12 @@
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\include\\string||{3B902123-F8A7-4915-9F01-361F908088D0}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\Windows.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\shared\\minwindef.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -77,7 +77,7 @@
               "RelativeDocumentMoniker": "Console_DLL_Injector\\main.cpp",
               "ToolTip": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\main.cpp",
               "RelativeToolTip": "Console_DLL_Injector\\main.cpp",
-              "ViewState": "AQIAACEAAAAAAAAAAAAAADcAAAA0AAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAABFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-04-23T07:31:14.18Z",
               "IsPinned": true,
@@ -85,7 +85,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "ConsolePrinter.cpp",
               "DocumentMoniker": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\ConsolePrinter.cpp",
               "RelativeDocumentMoniker": "Console_DLL_Injector\\ConsolePrinter.cpp",
@@ -94,12 +94,11 @@
               "ViewState": "AQIAAB4AAAAAAAAAAAAAAC8AAAALAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-04-23T07:41:43.811Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "PagesManager.cpp",
               "DocumentMoniker": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\PagesManager.cpp",
               "RelativeDocumentMoniker": "Console_DLL_Injector\\PagesManager.cpp",
@@ -108,21 +107,7 @@
               "ViewState": "AQIAAGIAAAAAAAAAAAAqwHMAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-04-23T08:05:28.51Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Windows.h",
-              "DocumentMoniker": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\Windows.h",
-              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\Windows.h",
-              "ToolTip": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\Windows.h",
-              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\Windows.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-05-05T19:00:20.707Z",
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Bookmark",
@@ -138,7 +123,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 14,
+              "Title": "Windows.h",
+              "DocumentMoniker": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\Windows.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\Windows.h",
+              "ToolTip": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\Windows.h",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\Windows.h",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-05-05T19:00:20.707Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
               "Title": "string",
               "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\include\\string",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\include\\string",
@@ -151,19 +148,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "ScreenState.cpp",
-              "DocumentMoniker": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\ScreenState.cpp",
-              "RelativeDocumentMoniker": "Console_DLL_Injector\\ScreenState.cpp",
-              "ToolTip": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\ScreenState.cpp",
-              "RelativeToolTip": "Console_DLL_Injector\\ScreenState.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAABAAAA",
+              "Title": "ScreenManager.cpp",
+              "DocumentMoniker": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\ScreenManager.cpp",
+              "RelativeDocumentMoniker": "Console_DLL_Injector\\ScreenManager.cpp",
+              "ToolTip": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\ScreenManager.cpp",
+              "RelativeToolTip": "Console_DLL_Injector\\ScreenManager.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACcAAAAfAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-04-24T15:36:03.764Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 11,
               "Title": "xutility",
               "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\include\\xutility",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\include\\xutility",
@@ -175,7 +172,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 12,
               "Title": "xtree",
               "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\include\\xtree",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\include\\xtree",
@@ -187,7 +184,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "ConsolePrinter.h",
               "DocumentMoniker": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\ConsolePrinter.h",
               "RelativeDocumentMoniker": "Console_DLL_Injector\\ConsolePrinter.h",
@@ -195,12 +192,11 @@
               "RelativeToolTip": "Console_DLL_Injector\\ConsolePrinter.h",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-04-24T07:54:09.296Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-04-24T07:54:09.296Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 15,
               "Title": "minwindef.h",
               "DocumentMoniker": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\shared\\minwindef.h",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\shared\\minwindef.h",
@@ -208,12 +204,11 @@
               "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\shared\\minwindef.h",
               "ViewState": "AQIAAF8AAAAAAAAAAAAuwMAAAAALAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-04-24T07:19:15.499Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-04-24T07:19:15.499Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 9,
               "Title": "TlHelp32.h",
               "DocumentMoniker": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\TlHelp32.h",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\TlHelp32.h",
@@ -225,7 +220,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 6,
               "Title": "PagesManager.h",
               "DocumentMoniker": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\PagesManager.h",
               "RelativeDocumentMoniker": "Console_DLL_Injector\\PagesManager.h",
@@ -233,25 +228,24 @@
               "RelativeToolTip": "Console_DLL_Injector\\PagesManager.h",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-04-23T08:00:13.98Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-04-23T08:00:13.98Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "ScreenState.h",
-              "DocumentMoniker": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\ScreenState.h",
-              "RelativeDocumentMoniker": "Console_DLL_Injector\\ScreenState.h",
-              "ToolTip": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\ScreenState.h",
-              "RelativeToolTip": "Console_DLL_Injector\\ScreenState.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAASAAAA",
+              "DocumentIndex": 2,
+              "Title": "ScreenManager.h",
+              "DocumentMoniker": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\ScreenManager.h",
+              "RelativeDocumentMoniker": "Console_DLL_Injector\\ScreenManager.h",
+              "ToolTip": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\ScreenManager.h",
+              "RelativeToolTip": "Console_DLL_Injector\\ScreenManager.h",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-04-23T07:41:04.973Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 10,
               "Title": "vector",
               "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\include\\vector",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\include\\vector",
@@ -263,7 +257,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 8,
               "Title": "MemoryUtils.cpp",
               "DocumentMoniker": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\MemoryUtils.cpp",
               "RelativeDocumentMoniker": "Console_DLL_Injector\\MemoryUtils.cpp",
@@ -275,7 +269,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 7,
               "Title": "MemoryUtils.h",
               "DocumentMoniker": "C:\\Users\\Corty\\source\\repos\\Console_DLL_Injector\\Console_DLL_Injector\\MemoryUtils.h",
               "RelativeDocumentMoniker": "Console_DLL_Injector\\MemoryUtils.h",

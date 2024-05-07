@@ -14,7 +14,7 @@
     <Filter Include="PageManager">
       <UniqueIdentifier>{3dafc1bd-d9a7-433e-ab99-fa8053c6e44e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ScreenState">
+    <Filter Include="ScreenManager">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
@@ -32,13 +32,13 @@
     <ClCompile Include="PagesManager.cpp">
       <Filter>PageManager</Filter>
     </ClCompile>
-    <ClCompile Include="ScreenState.cpp">
-      <Filter>ScreenState</Filter>
+    <ClCompile Include="ScreenManager.cpp">
+      <Filter>ScreenManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ScreenState.h">
-      <Filter>ScreenState</Filter>
+    <ClInclude Include="ScreenManager.h">
+      <Filter>ScreenManager</Filter>
     </ClInclude>
     <ClInclude Include="ConsolePrinter.h">
       <Filter>ConsolePrinter</Filter>
