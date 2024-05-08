@@ -32,10 +32,10 @@ int main()
 		}
 		else if (screenManager.bScreenDLL)
 		{
-			screenManager.RunProcPage(&pagesManager, &memUtils);
-
-			Sleep(5);
+			screenManager.RunDllPage(&pagesManager, &memUtils);
 		}
+
+		Sleep(5);
 	}
 
 	return 0;
