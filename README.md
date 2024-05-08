@@ -1,4 +1,4 @@
-# Console Dll Injector
+# Corty Console Injector
 A console app that will scan all process to injected into the selected one a DLL with the LoadLibraryA Windows API function.
 
 ## Features
