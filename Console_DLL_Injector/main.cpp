@@ -7,6 +7,8 @@
 
 int main()
 {
+	SetConsoleTitle(L"Corty Injector");
+
 	// Get process entries
 	MemoryUtils memUtils{};
 	std::vector<PROCESSENTRY32> procEntryList{ memUtils.GetProcList() };
