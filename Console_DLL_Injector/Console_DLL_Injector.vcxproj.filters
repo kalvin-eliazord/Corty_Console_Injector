@@ -1,53 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="View">
+      <UniqueIdentifier>{b990aa58-53f5-400b-8d88-5b630b5c9d92}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ConsolePrinter">
+    <Filter Include="View\ConsolePrinter">
       <UniqueIdentifier>{fd96062c-0f25-495a-8312-cfacb03fc0ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MemoryUtils">
+    <Filter Include="Model">
+      <UniqueIdentifier>{b2f4e61a-eac8-4c47-8755-c10e4c9bc986}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\MemoryUtils">
       <UniqueIdentifier>{53116569-591c-4c21-a8de-5b27743f464e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PageManager">
+    <Filter Include="Model\PageManager">
       <UniqueIdentifier>{3dafc1bd-d9a7-433e-ab99-fa8053c6e44e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ScreenManager">
+    <Filter Include="Controller">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ConsolePrinter.cpp">
-      <Filter>ConsolePrinter</Filter>
+    <ClCompile Include="Console.cpp">
+      <Filter>View\ConsolePrinter</Filter>
     </ClCompile>
     <ClCompile Include="MemoryUtils.cpp">
-      <Filter>MemoryUtils</Filter>
+      <Filter>Model\MemoryUtils</Filter>
     </ClCompile>
     <ClCompile Include="PagesManager.cpp">
-      <Filter>PageManager</Filter>
+      <Filter>Model\PageManager</Filter>
     </ClCompile>
-    <ClCompile Include="ScreenManager.cpp">
-      <Filter>ScreenManager</Filter>
+    <ClCompile Include="ScreenController.cpp">
+      <Filter>Controller</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ScreenManager.h">
-      <Filter>ScreenManager</Filter>
+    <ClInclude Include="ScreenController.h">
+      <Filter>Controller</Filter>
     </ClInclude>
-    <ClInclude Include="ConsolePrinter.h">
-      <Filter>ConsolePrinter</Filter>
+    <ClInclude Include="Console.h">
+      <Filter>View\ConsolePrinter</Filter>
     </ClInclude>
     <ClInclude Include="MemoryUtils.h">
-      <Filter>MemoryUtils</Filter>
+      <Filter>Model\MemoryUtils</Filter>
     </ClInclude>
     <ClInclude Include="PagesManager.h">
-      <Filter>PageManager</Filter>
+      <Filter>Model\PageManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

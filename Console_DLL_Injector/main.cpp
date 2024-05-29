@@ -1,5 +1,5 @@
-#include "ConsolePrinter.h"
-#include "ScreenManager.h"
+#include "Console.h"
+#include "ScreenController.h"
 #include "MemoryUtils.h"
 #include "PagesManager.h"
 #include <iostream>
@@ -16,15 +16,15 @@ int main()
 	if (procEntryList.empty())
 	{
 		std::cerr << "[!] No process found.";
-		Sleep(5000);
+		system("PAUSE");
 		return -1;
 	} 
 
 	PagesManager pagesManager(procEntryList);
-	ScreenManager screenManager;
+	ScreenController screenManager;
 
 	// First screen
-	ConsolePrinter::PrintProcessPage(&pagesManager);
+	Console::PrintProcessPage(&pagesManager);
 
 	while (!GetAsyncKeyState(VK_DELETE) & 1)
 	{
@@ -34,7 +34,7 @@ int main()
 		}
 		else if (screenManager.bScreenDLL)
 		{
-			screenManager.RunDllPage(&pagesManager, &memUtils);
+			screenManager.RunDLLPage(&pagesManager, &memUtils);
 		}
 
 		Sleep(5);

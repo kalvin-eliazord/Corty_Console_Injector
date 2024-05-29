@@ -62,22 +62,22 @@ void PagesManager::GoPreviousPage()
 	procIterator = it;
 }
 
-DWORD PagesManager::GetProcIdChosen()
+DWORD PagesManager::GetUserIdProc()
 {
-	return processMap[procKeyChosen];
+	return processMap[userProcess];
 }
 
-std::wstring_view PagesManager::GetProcKeyChosen()
+std::wstring_view PagesManager::GetUserProcess()
 {
-	return procKeyChosen;
+	return userProcess;
 }
 
-void PagesManager::SetProcKeyChosen(DWORD pIdChosen)
+void PagesManager::SetUserProcess(DWORD pIdChosen)
 {
-	procKeyChosen = FindProcKeyChosen(pIdChosen);
+	userProcess = FindUserProcess(pIdChosen);
 }
 
-std::wstring PagesManager::FindProcKeyChosen(DWORD pIdChosen)
+std::wstring PagesManager::FindUserProcess(DWORD pIdChosen)
 {
 	auto it{ std::find_if(processMap.begin(), processMap.end(),
 		[pIdChosen](const std::pair<const std::wstring, DWORD>& entry)

@@ -10,7 +10,7 @@ class PagesManager
 {
 private:
 	const int maxProcessNb;
-	std::wstring procKeyChosen;
+	std::wstring userProcess;
 	const int totalProcPerPage{ 21 };
 	std::map<std::wstring, DWORD> processMap;
 
@@ -22,18 +22,18 @@ private:
 	void SetTotalProcess();
 	void SetProcIterator();
 	void SetProcessMap(std::vector<PROCESSENTRY32> pProcList);
-	std::wstring FindProcKeyChosen(DWORD pIdChosen);
+	std::wstring FindUserProcess(DWORD pIdChosen);
 
 public:
 	void GoNextPage();
 	int GetTotalPages();
 	int GetCurrentPage();
 	void GoPreviousPage();
-	DWORD GetProcIdChosen();
+	DWORD GetUserIdProc();
 	int GetTotalProcess() const;
 	int GetTotalProcPerPage() const;
-	std::wstring_view GetProcKeyChosen();
-	void SetProcKeyChosen(DWORD pIdChosen);
+	std::wstring_view GetUserProcess();
+	void SetUserProcess(DWORD pIdChosen);
 	std::map<std::wstring, DWORD> GetProcessMap();
 	PagesManager(std::vector<PROCESSENTRY32> pProcList);
 	std::map< std::wstring, DWORD>::iterator GetProcIterator();

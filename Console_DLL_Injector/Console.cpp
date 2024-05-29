@@ -1,10 +1,10 @@
-#include "ConsolePrinter.h"
+#include "Console.h"
 
-void ConsolePrinter::PrintHeaderProc()
+void Console::PrintHeaderProc()
 {
 	system("CLS");
 
-	std::cout << "---------------------->> CONSOLE INJECTOR by KALVIN <<---------------------------- \n";
+	std::cout << "------------------------>> CORTY CONSOLE INJECTOR <<------------------------------ \n";
 	std::cout << "---------------------------------------------------------------------------------- \n";
 	std::cout << "--------->> /!\\ Put the DLL into the same folder as the injector /!\\ <<--------- \n";
 	std::cout << "---------------------------------------------------------------------------------- \n";
@@ -12,27 +12,27 @@ void ConsolePrinter::PrintHeaderProc()
 	std::cout << "---------------------------------------------------------------------------------- \n";
 }
 
-void ConsolePrinter::PrintProcessPage(PagesManager* pPagesManager)
+void Console::PrintProcessPage(PagesManager* pPagesManager)
 {
-	ConsolePrinter::PrintHeaderProc();
+	Console::PrintHeaderProc();
 
-	ConsolePrinter::PrintEachProcess(pPagesManager);
+	Console::PrintEachProcess(pPagesManager);
 
-	ConsolePrinter::PrintFooterProc(pPagesManager->GetCurrentPage(), pPagesManager->GetTotalPages());
+	Console::PrintFooterProc(pPagesManager->GetCurrentPage(), pPagesManager->GetTotalPages());
 }
 
-void ConsolePrinter::PrintEachProcess(PagesManager* pPagesManager)
+void Console::PrintEachProcess(PagesManager* pPagesManager)
 {
 	std::map<std::wstring, DWORD>::iterator procIt{ pPagesManager->GetProcIterator() };
 
 	for (int i{ 0 }; i < pPagesManager->GetTotalProcPerPage(); ++i)
 	{
-		std::wcout << "[+]" << procIt->first << " -------------> [ID]: " << std::hex << procIt->second << "\n";
+		std::wcout << "[+]" << procIt->first << " -------------> [ID]: " << std::hex << procIt->second << '\n';
 		++procIt;
 	}
 }
 
-void ConsolePrinter::PrintFooterProc(const int pCurrPage, const int pMaxPageNb)
+void Console::PrintFooterProc(const int pCurrPage, const int pMaxPageNb)
 {
 	std::cout << "------------------------------->> [PAGE " << pCurrPage << "/" << pMaxPageNb << "] <<---------------------------------- \n";
 	std::cout << "--------------------->> PREVIOUS page [F1] | NEXT page [F2] <<------------------- \n";
@@ -40,7 +40,7 @@ void ConsolePrinter::PrintFooterProc(const int pCurrPage, const int pMaxPageNb)
 
 }
 
-bool ConsolePrinter::GetUserInput(PagesManager* pPagesManager)
+bool Console::GetUserInput(PagesManager* pPagesManager)
 {
 	std::string procId_input{};
 	std::cin >> procId_input;
@@ -57,7 +57,7 @@ bool ConsolePrinter::GetUserInput(PagesManager* pPagesManager)
 
 	try
 	{
-		// Parse the (hexadecimal) string input as an integer
+		// Parse the string input as an hex integer
 		iProcId_input = std::stoi(procId_input, nullptr, 16);
 	}
 	catch (const std::invalid_argument)
@@ -71,61 +71,59 @@ bool ConsolePrinter::GetUserInput(PagesManager* pPagesManager)
 		return false;
 	}
 
-	pPagesManager->SetProcKeyChosen(iProcId_input);
+	pPagesManager->SetUserProcess(iProcId_input);
 
 	// Checking if the procId entered exist
-	if (pPagesManager->GetProcKeyChosen().empty())
+	if (pPagesManager->GetUserProcess().empty())
 		return false;
 
 	return true;
 }
 
-void ConsolePrinter::PrintDllPage(PagesManager* pPagesManager, std::string_view pDllName)
+void Console::PrintDLLPage(PagesManager* pPagesManager, std::string_view pDLLName, bool pManualMap)
 {
-	PrintHeaderDll();
-	PrintProcKeyChosen(pPagesManager);
-	PrintDll(pDllName);
-	PrintFooterDll();
+	PrintHeaderDLL();
+	PrintBodyDLL(pDLLName, pPagesManager, pManualMap);
+	PrintFooterDLL();
 }
 
-void ConsolePrinter::PrintHeaderDll()
+void Console::PrintHeaderDLL()
 {
 	system("CLS");
 
-	std::cout << "---------------------->> CONSOLE INJECTOR by KALVIN <<---------------------------- \n";
+	std::cout << "------------------------>> CORTY CONSOLE INJECTOR <<------------------------------ \n";
 	std::cout << "---------------------------------------------------------------------------------- \n";
 	std::cout << " >> /!\\ Put the DLL and the .EXE shorcut in the same folder of the injector /!\\ <<\n";
 	std::cout << "---------------------------------------------------------------------------------- \n";
-	std::cout << "------------------->> [ [F5] to REFRESH | [F6] to INJECT ] <<--------------------- \n";
+	std::cout << "------->> [ [F5] to REFRESH | [F6] to INJECT | [F2] SWITCH injection ] <<--------- \n";
 	std::cout << "---------------------------------------------------------------------------------- \n";
 }
 
-void ConsolePrinter::PrintProcKeyChosen(PagesManager* pPagesManager)
+void Console::PrintBodyDLL(std::string_view pDLLName, PagesManager* pPagesManager, bool pManualMap)
 {
-	std::wstring procKey{ pPagesManager->GetProcKeyChosen() };
+	std::string_view dllOutput{ "[!] Please insert a DLL file and press [F5] (REFRESH)." };
+	std::string_view injecType{ "LoadLibraryA" };
+
+	std::wstring nameProc{ pPagesManager->GetUserProcess() };
 	std::map<std::wstring, DWORD> procMap{ pPagesManager->GetProcessMap() };
 
-	std::wcout << "[+] ------> Process: \"" << procKey << "\" - ID: " << std::hex << procMap[procKey] << " selected. \n";
+	if (!pDLLName.empty()) dllOutput = pDLLName;
+	if (pManualMap) injecType = "Manual Map";
+
+	std::cout  << "[+] Injection Type: " << injecType << '\n';
+	std::wcout << "[+] Process: \"" << nameProc << "\" - ID: " << std::hex << procMap[nameProc] << '\n';
+	std::cout  << "[+] The directory contain: \n";
+	std::cout  << "[+] " << dllOutput << '\n';
 }
 
-void ConsolePrinter::PrintDll(std::string_view pDllName)
-{
-	std::string_view dllOutput{ "[!] No .Dll in the folder. Please insert .Dll file and REFRESH." };
-
-	if (!pDllName.empty()) dllOutput = pDllName;
-
-	std::cout << "[+] ------> The directory contain: \n";
-	std::cout << "[+] ------> " << dllOutput << "\n";
-}
-
-void ConsolePrinter::PrintFooterDll()
+void Console::PrintFooterDLL()
 {
 	std::cout << "---------------------------------------------------------------------------------- \n";
 	std::cout << "---------------------------------------------------------------------------------- \n";
 	std::cout << "[+] ------------->> [ [F1] to go BACK to the process list ] <<-------------------- \n";
 }
 
-void ConsolePrinter::PrintDllInjected(std::wstring_view pProcKeyChosen, std::string_view pDllName)
+void Console::PrintDLLInjected(std::wstring_view pProcKeyChosen, std::string_view pDLLName)
 {
-	std::cout << "[+] The Dll \"" << pDllName << "\" is loaded into "; std::wcout << pProcKeyChosen << " process! \n";
+	std::cout << "[+] The DLL \"" << pDLLName << "\" is loaded into "; std::wcout << pProcKeyChosen << " process! \n";
 }

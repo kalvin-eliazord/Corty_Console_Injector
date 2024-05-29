@@ -13,9 +13,10 @@ private:
 	std::string dllName{""};
 public:
 	MemoryUtils();
-	void SetDllName();
-	std::string_view GetDllName();
-	std::string GetDllCurrDirectory();
-	bool InjectDllIntoProc(DWORD pProcId);
+	void SetDLLName();
+	std::string_view GetDLLName();
+	std::string GetDLLCurrDirectory();
+	bool WinAPI_Injection(DWORD pProcId);
+	bool ManualMapping_Injection(DWORD pProcId);
 	std::vector<PROCESSENTRY32> GetProcList();
 };

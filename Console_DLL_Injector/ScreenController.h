@@ -2,16 +2,17 @@
 #include <Windows.h>
 #include "PagesManager.h"
 #include "MemoryUtils.h"
-#include "ConsolePrinter.h"
+#include "Console.h"
 
-struct ScreenManager
+struct ScreenController
 {
 	bool bScreenDLL{ false };
 	bool bScreenProcess{ true };
 	bool bValidInput;
+	bool bManualMap{ false };
 
-	void SwitchToDllScreen();
+	void SwitchToDLLScreen();
 	void SwitchToProcessScreen();
-	void RunDllPage(PagesManager* pPagesManager, MemoryUtils* pMemUtils);
+	void RunDLLPage(PagesManager* pPagesManager, MemoryUtils* pMemUtils);
 	void RunProcPage(PagesManager* pPagesManager, MemoryUtils* pMemUtils);
 };

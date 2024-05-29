@@ -136,17 +136,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ConsolePrinter.cpp" />
+    <ClCompile Include="Console.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MemoryUtils.cpp" />
     <ClCompile Include="PagesManager.cpp" />
-    <ClCompile Include="ScreenManager.cpp" />
+    <ClCompile Include="ScreenController.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ConsolePrinter.h" />
+    <ClInclude Include="Console.h" />
     <ClInclude Include="MemoryUtils.h" />
     <ClInclude Include="PagesManager.h" />
-    <ClInclude Include="ScreenManager.h" />
+    <ClInclude Include="ScreenController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

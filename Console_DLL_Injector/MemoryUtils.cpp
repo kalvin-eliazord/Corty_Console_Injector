@@ -25,37 +25,37 @@ std::vector<PROCESSENTRY32> MemoryUtils::GetProcList()
 	return procList;
 }
 
-void MemoryUtils::SetDllName()
+void MemoryUtils::SetDLLName()
 {
 	std::string currentDir{ "./" };
 
-	bool bDllNotFound{ true };
+	bool bDLLNotFound{ true };
 
 	for (const auto& file : fs::directory_iterator(currentDir))
 	{
 		if (file.path().extension() == ".dll")
 		{
 			dllName = file.path().filename().generic_string();
-			bDllNotFound = false;
+			bDLLNotFound = false;
 			break;
 		}
 	}
 
 	// making name empty if no file found
-	if (bDllNotFound) dllName.clear();
+	if (bDLLNotFound) dllName.clear();
 }
 
 MemoryUtils::MemoryUtils()
 {
-	SetDllName();
+	SetDLLName();
 }
 
-std::string_view MemoryUtils::GetDllName()
+std::string_view MemoryUtils::GetDLLName()
 {
 	return dllName;
 }
 
-std::string MemoryUtils::GetDllCurrDirectory()
+std::string MemoryUtils::GetDLLCurrDirectory()
 {
 	const int bufferSize{ 1024 };
 	char bufferDir[bufferSize];
@@ -66,10 +66,10 @@ std::string MemoryUtils::GetDllCurrDirectory()
 	return "[!] Can't get current directory path.";
 }
 
-bool MemoryUtils::InjectDllIntoProc(DWORD pProcId)
+bool MemoryUtils::WinAPI_Injection(DWORD pProcId)
 {
-	// Set Dll path
-	std::string dllCurrDir{ GetDllCurrDirectory() };
+	// Set DLL path
+	std::string dllCurrDir{ GetDLLCurrDirectory() };
 
 	std::string dllPath{ dllCurrDir + std::string("\\" + dllName) };
 
@@ -77,7 +77,7 @@ bool MemoryUtils::InjectDllIntoProc(DWORD pProcId)
 
 	if (hProc == INVALID_HANDLE_VALUE)
 	{
-		std::cerr << "[!] Failed to open process. Error: " << GetLastError() << "\n";
+		std::cerr << "[!] Failed to open process. Error: \n" << GetLastError();;
 		return false;
 	}
 
@@ -86,18 +86,18 @@ bool MemoryUtils::InjectDllIntoProc(DWORD pProcId)
 
 	if (!memAlloc)
 	{
-		std::cerr << "[!] Failed to allocate memory. Error: " << GetLastError() << "\n";
+		std::cerr << "[!] Failed to allocate memory. Error: \n" << GetLastError();
 		CloseHandle(hProc);
 		return false;
 	}
 
-	//std::cout << "[+] dllPath: \n" << dllPath << "\n";
+	//std::cout << "[+] dllPath: \n" << dllPath << '\n';
 
 	SIZE_T bytesWritten;
 	if (!WriteProcessMemory(hProc, memAlloc, dllPath.c_str(), strlen(dllPath.c_str()) + 1, &bytesWritten)
 		|| !bytesWritten)
 	{
-		std::cerr << "[!] Failed to write process memory. Error: " << GetLastError() << "\n";
+		std::cerr << "[!] Failed to write process memory. Error: \n" << GetLastError();
 		VirtualFreeEx(hProc, memAlloc, 0, MEM_RELEASE);
 		CloseHandle(hProc);
 		return false;
@@ -107,7 +107,7 @@ bool MemoryUtils::InjectDllIntoProc(DWORD pProcId)
 
 	if (!remoteThread || remoteThread == INVALID_HANDLE_VALUE)
 	{
-		std::cerr << "[!] Failed to create remote thread. Error:" << GetLastError() << "\n";
+		std::cerr << "[!] Failed to create remote thread. Error:\n" << GetLastError();;
 		VirtualFreeEx(hProc, memAlloc, 0, MEM_RELEASE);
 		CloseHandle(hProc);
 		return false;
@@ -119,5 +119,11 @@ bool MemoryUtils::InjectDllIntoProc(DWORD pProcId)
 	VirtualFreeEx(hProc, memAlloc, 0, MEM_RELEASE);
 	CloseHandle(hProc);
 
+	return true;
+}
+
+bool MemoryUtils::ManualMapping_Injection(DWORD pProcId)
+{
+	// TODO
 	return true;
 }

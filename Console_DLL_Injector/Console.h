@@ -8,7 +8,7 @@
 #undef max
 #include <limits>
 
-namespace ConsolePrinter
+namespace Console
 {
 	// process page
 	void PrintHeaderProc();
@@ -18,10 +18,9 @@ namespace ConsolePrinter
 	bool GetUserInput(PagesManager* pPagesManager);
 
 	// DLl page
-	void PrintHeaderDll();
-	void PrintFooterDll();
-	void PrintDll(std::string_view pDllName);
-	void PrintProcKeyChosen(PagesManager* pPagesManager);
-	void PrintDllPage(PagesManager* pPagesManager, std::string_view pDllName);
-	void PrintDllInjected(std::wstring_view pProcKeyChosen, std::string_view pDllName);
+	void PrintHeaderDLL();
+	void PrintFooterDLL();
+	void PrintBodyDLL(std::string_view pDLLName, PagesManager* pPagesManager, bool pManualMap);
+	void PrintDLLPage(PagesManager* pPagesManager, std::string_view pDLLName, bool pManualMap);
+	void PrintDLLInjected(std::wstring_view pProcKeyChosen, std::string_view pDLLName);
 };
