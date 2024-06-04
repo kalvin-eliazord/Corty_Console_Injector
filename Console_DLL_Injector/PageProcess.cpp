@@ -1,6 +1,6 @@
-#include "PagesManager.h"
+#include "PageProcess.h"
 
-PagesManager::PagesManager(std::vector<PROCESSENTRY32> pProcList)
+PageProcess::PageProcess(std::vector<PROCESSENTRY32> pProcList)
 	: maxProcessNb { static_cast<int>(pProcList.size())}
 {
 	// Storing name and ID of each process
@@ -9,7 +9,7 @@ PagesManager::PagesManager(std::vector<PROCESSENTRY32> pProcList)
 	SetTotalProcess();
 }
 
-void PagesManager::SetProcessMap(std::vector<PROCESSENTRY32> pProcList)
+void PageProcess::SetProcessMap(std::vector<PROCESSENTRY32> pProcList)
 {
 	if (pProcList.empty()) return;
 
@@ -17,39 +17,39 @@ void PagesManager::SetProcessMap(std::vector<PROCESSENTRY32> pProcList)
 		processMap[currProc.szExeFile] = currProc.th32ProcessID;
 }
 
-void PagesManager::SetTotalProcess()
+void PageProcess::SetTotalProcess()
 {
 	if (processMap.empty()) return;
 
 	totalPages = (static_cast<int>(processMap.size()) - 1) / totalProcPerPage;
 }
 
-int PagesManager::GetCurrentPage()
+int PageProcess::GetCurrentPage()
 {
 	return currPage;
 }
 
-int PagesManager::GetTotalPages()
+int PageProcess::GetTotalPages()
 {
 	return totalPages;
 }
 
-int PagesManager::GetTotalProcess() const
+int PageProcess::GetTotalProcess() const
 {
 	return maxProcessNb;
 }
 
-int PagesManager::GetTotalProcPerPage() const
+int PageProcess::GetTotalProcPerPage() const
 {
 	return totalProcPerPage;
 }
 
-std::map<std::wstring, DWORD> PagesManager::GetProcessMap()
+std::map<std::wstring, DWORD> PageProcess::GetProcessMap()
 {
 	return processMap;
 }
 
-void PagesManager::GoPreviousPage()
+void PageProcess::GoPreviousPage()
 {
 	--currPage;
 	
@@ -62,22 +62,22 @@ void PagesManager::GoPreviousPage()
 	procIterator = it;
 }
 
-DWORD PagesManager::GetUserIdProc()
+DWORD PageProcess::GetUserIdProc()
 {
 	return processMap[userProcess];
 }
 
-std::wstring_view PagesManager::GetUserProcess()
+std::wstring_view PageProcess::GetUserProcName()
 {
 	return userProcess;
 }
 
-void PagesManager::SetUserProcess(DWORD pIdChosen)
+void PageProcess::SetUserProcess(DWORD pIdChosen)
 {
 	userProcess = FindUserProcess(pIdChosen);
 }
 
-std::wstring PagesManager::FindUserProcess(DWORD pIdChosen)
+std::wstring PageProcess::FindUserProcess(DWORD pIdChosen)
 {
 	auto it{ std::find_if(processMap.begin(), processMap.end(),
 		[pIdChosen](const std::pair<const std::wstring, DWORD>& entry)
@@ -92,7 +92,7 @@ std::wstring PagesManager::FindUserProcess(DWORD pIdChosen)
 	return std::wstring();
 }
 
-void PagesManager::GoNextPage()
+void PageProcess::GoNextPage()
 {
 	++currPage;
 
@@ -105,12 +105,12 @@ void PagesManager::GoNextPage()
 	procIterator = it;
 }
 
-std::map<std::wstring, DWORD>::iterator PagesManager::GetProcIterator()
+std::map<std::wstring, DWORD>::iterator PageProcess::GetProcIterator()
 {
 	return procIterator;
 }
 
-void PagesManager::SetProcIterator()
+void PageProcess::SetProcIterator()
 {
 	procIterator = processMap.begin();
 }

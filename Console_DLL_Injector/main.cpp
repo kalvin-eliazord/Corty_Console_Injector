@@ -1,7 +1,7 @@
 #include "Console.h"
 #include "ScreenController.h"
-#include "MemoryUtils.h"
-#include "PagesManager.h"
+#include "MemUtils.h"
+#include "PageProcess.h"
 #include <iostream>
 #include <conio.h>
 
@@ -10,7 +10,7 @@ int main()
 	SetConsoleTitle(L"Corty Injector");
 
 	// Get process entries
-	MemoryUtils memUtils{};
+	MemUtils memUtils{};
 	std::vector<PROCESSENTRY32> procEntryList{ memUtils.GetProcList() };
 
 	if (procEntryList.empty())
@@ -20,7 +20,7 @@ int main()
 		return -1;
 	} 
 
-	PagesManager pagesManager(procEntryList);
+	PageProcess pagesManager(procEntryList);
 	ScreenController screenManager;
 
 	// First screen
@@ -29,13 +29,9 @@ int main()
 	while (!GetAsyncKeyState(VK_DELETE) & 1)
 	{
 		if (screenManager.bScreenProcess)
-		{
 			screenManager.RunProcPage(&pagesManager, &memUtils);
-		}
 		else if (screenManager.bScreenDLL)
-		{
 			screenManager.RunDLLPage(&pagesManager, &memUtils);
-		}
 
 		Sleep(5);
 	}

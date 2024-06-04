@@ -1,6 +1,6 @@
 #include "ScreenController.h"
 
-void ScreenController::SwitchToDLLScreen()
+void ScreenController::GetDllScreen()
 {
 	bScreenProcess = false;
 	bScreenDLL = true;
@@ -13,26 +13,26 @@ void ScreenController::SwitchToProcessScreen()
 	bScreenProcess = true;
 }
 
-void ScreenController::RunDLLPage(PagesManager* pPagesManager, MemoryUtils* pMemUtils)
+void ScreenController::RunDLLPage(PageProcess* pPagesManager, MemUtils* pMemUtils)
 {
 	// REFRESH screen DLL
 	if (GetAsyncKeyState(VK_F5) & 1)
 	{
-		pMemUtils->SetDLLName();
-		Console::PrintDLLPage(pPagesManager, pMemUtils->GetDLLName(), bManualMap);
+		pMemUtils->SetDllPath();
+		Console::PrintDLLPage(pPagesManager, pMemUtils->dataDll.name, bManualMap);
 
 	} // INJECT DLL
 	else if (GetAsyncKeyState(VK_F6) & 1)
 	{
 		if (bManualMap)
 		{
-			if (pMemUtils->ManualMapping_Injection(pPagesManager->GetUserIdProc()))
-				Console::PrintDLLInjected(pPagesManager->GetUserProcess(), pMemUtils->GetDLLName());
+			if (pMemUtils->ManualMap_Start())
+				Console::PrintDLLInjected(pPagesManager->GetUserProcName(), pMemUtils->dataDll.name);
 		}
 		else
 		{
-			if (pMemUtils->WinAPI_Injection(pPagesManager->GetUserIdProc()))
-				Console::PrintDLLInjected(pPagesManager->GetUserProcess(), pMemUtils->GetDLLName());
+			if (pMemUtils->WinAPI_Inject_Start())
+				Console::PrintDLLInjected(pPagesManager->GetUserProcName(), pMemUtils->dataDll.name);
 		}
 
 	} // Go BACK to process list screen
@@ -40,18 +40,18 @@ void ScreenController::RunDLLPage(PagesManager* pPagesManager, MemoryUtils* pMem
 	{
 		SwitchToProcessScreen();
 
-		PagesManager pagesManager(pMemUtils->GetProcList());
+		PageProcess pagesManager(pMemUtils->GetProcList());
 		Console::PrintProcessPage(&pagesManager);
 
 	} // INJECTION TYPE SWITCH
 	else if (GetAsyncKeyState(VK_F2) & 1)
 	{
 		bManualMap = !bManualMap;
-		Console::PrintDLLPage(pPagesManager, pMemUtils->GetDLLName(), bManualMap);
+		Console::PrintDLLPage(pPagesManager, pMemUtils->dataDll.name, bManualMap);
 	}
 }
 
-void ScreenController::RunProcPage(PagesManager* pPagesManager, MemoryUtils* pMemUtils)
+void ScreenController::RunProcPage(PageProcess* pPagesManager, MemUtils* pMemUtils)
 {
 	// PREVIOUS page process
 	if (GetAsyncKeyState(VK_F1) & 1)
@@ -68,10 +68,10 @@ void ScreenController::RunProcPage(PagesManager* pPagesManager, MemoryUtils* pMe
 	} // REFRESH process entries
 	else if (GetAsyncKeyState(VK_F5) & 1)
 	{
-		PagesManager pPagesManager(pMemUtils->GetProcList());
+		PageProcess pPagesManager(pMemUtils->GetProcList());
 		Console::PrintProcessPage(&pPagesManager);
 
-	} // SELECT process 
+	} // INPUT process ID
 	else if (GetAsyncKeyState(VK_F6) & 1)
 	{
 		bValidInput = false;
@@ -80,13 +80,14 @@ void ScreenController::RunProcPage(PagesManager* pPagesManager, MemoryUtils* pMe
 		{
 			if (Console::GetUserInput(pPagesManager))
 			{
-				SwitchToDLLScreen();
-				pMemUtils->SetDLLName();
-				Console::PrintDLLPage(pPagesManager, pMemUtils->GetDLLName(), bManualMap);
+				pMemUtils->InitDataProc(pPagesManager);
+				GetDllScreen();
+				pMemUtils->SetDllPath();
+				Console::PrintDLLPage(pPagesManager, pMemUtils->dataDll.name, bManualMap);
 			}
 
 			// CANCEL input process
-			if (GetAsyncKeyState(VK_ESCAPE) & 1) break;
+		//	if (GetAsyncKeyState(VK_ESCAPE) & 1) break;
 
 		} while (!bValidInput);
 	}

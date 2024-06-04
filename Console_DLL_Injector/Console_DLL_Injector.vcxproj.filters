@@ -13,23 +13,23 @@
     <Filter Include="Model\MemoryUtils">
       <UniqueIdentifier>{53116569-591c-4c21-a8de-5b27743f464e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\PageManager">
-      <UniqueIdentifier>{3dafc1bd-d9a7-433e-ab99-fa8053c6e44e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Controller">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Model\PageProcess">
+      <UniqueIdentifier>{3dafc1bd-d9a7-433e-ab99-fa8053c6e44e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Console.cpp">
       <Filter>View\ConsolePrinter</Filter>
     </ClCompile>
-    <ClCompile Include="MemoryUtils.cpp">
+    <ClCompile Include="MemUtils.cpp">
       <Filter>Model\MemoryUtils</Filter>
     </ClCompile>
-    <ClCompile Include="PagesManager.cpp">
-      <Filter>Model\PageManager</Filter>
+    <ClCompile Include="PageProcess.cpp">
+      <Filter>Model\PageProcess</Filter>
     </ClCompile>
     <ClCompile Include="ScreenController.cpp">
       <Filter>Controller</Filter>
@@ -43,11 +43,11 @@
     <ClInclude Include="Console.h">
       <Filter>View\ConsolePrinter</Filter>
     </ClInclude>
-    <ClInclude Include="MemoryUtils.h">
+    <ClInclude Include="MemUtils.h">
       <Filter>Model\MemoryUtils</Filter>
     </ClInclude>
-    <ClInclude Include="PagesManager.h">
-      <Filter>Model\PageManager</Filter>
+    <ClInclude Include="PageProcess.h">
+      <Filter>Model\PageProcess</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

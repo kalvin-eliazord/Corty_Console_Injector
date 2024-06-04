@@ -109,7 +109,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,14 +138,14 @@
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MemoryUtils.cpp" />
-    <ClCompile Include="PagesManager.cpp" />
+    <ClCompile Include="MemUtils.cpp" />
+    <ClCompile Include="PageProcess.cpp" />
     <ClCompile Include="ScreenController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console.h" />
-    <ClInclude Include="MemoryUtils.h" />
-    <ClInclude Include="PagesManager.h" />
+    <ClInclude Include="MemUtils.h" />
+    <ClInclude Include="PageProcess.h" />
     <ClInclude Include="ScreenController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

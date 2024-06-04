@@ -6,7 +6,7 @@
 #include <string>
 #include <map>
 
-class PagesManager
+class PageProcess
 {
 private:
 	const int maxProcessNb;
@@ -32,9 +32,9 @@ public:
 	DWORD GetUserIdProc();
 	int GetTotalProcess() const;
 	int GetTotalProcPerPage() const;
-	std::wstring_view GetUserProcess();
+	std::wstring_view GetUserProcName();
 	void SetUserProcess(DWORD pIdChosen);
 	std::map<std::wstring, DWORD> GetProcessMap();
-	PagesManager(std::vector<PROCESSENTRY32> pProcList);
+	PageProcess(std::vector<PROCESSENTRY32> pProcList);
 	std::map< std::wstring, DWORD>::iterator GetProcIterator();
 };

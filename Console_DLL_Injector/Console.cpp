@@ -12,7 +12,7 @@ void Console::PrintHeaderProc()
 	std::cout << "---------------------------------------------------------------------------------- \n";
 }
 
-void Console::PrintProcessPage(PagesManager* pPagesManager)
+void Console::PrintProcessPage(PageProcess* pPagesManager)
 {
 	Console::PrintHeaderProc();
 
@@ -21,7 +21,7 @@ void Console::PrintProcessPage(PagesManager* pPagesManager)
 	Console::PrintFooterProc(pPagesManager->GetCurrentPage(), pPagesManager->GetTotalPages());
 }
 
-void Console::PrintEachProcess(PagesManager* pPagesManager)
+void Console::PrintEachProcess(PageProcess* pPagesManager)
 {
 	std::map<std::wstring, DWORD>::iterator procIt{ pPagesManager->GetProcIterator() };
 
@@ -40,7 +40,7 @@ void Console::PrintFooterProc(const int pCurrPage, const int pMaxPageNb)
 
 }
 
-bool Console::GetUserInput(PagesManager* pPagesManager)
+bool Console::GetUserInput(PageProcess* pPagesManager)
 {
 	std::string procId_input{};
 	std::cin >> procId_input;
@@ -53,12 +53,12 @@ bool Console::GetUserInput(PagesManager* pPagesManager)
 		return false;
 	}
 
-	int iProcId_input;
+	int userProcId;
 
 	try
 	{
 		// Parse the string input as an hex integer
-		iProcId_input = std::stoi(procId_input, nullptr, 16);
+		userProcId = std::stoi(procId_input, nullptr, 16);
 	}
 	catch (const std::invalid_argument)
 	{
@@ -71,16 +71,16 @@ bool Console::GetUserInput(PagesManager* pPagesManager)
 		return false;
 	}
 
-	pPagesManager->SetUserProcess(iProcId_input);
+	pPagesManager->SetUserProcess(userProcId);
 
 	// Checking if the procId entered exist
-	if (pPagesManager->GetUserProcess().empty())
+	if (pPagesManager->GetUserProcName().empty())
 		return false;
 
 	return true;
 }
 
-void Console::PrintDLLPage(PagesManager* pPagesManager, std::string_view pDLLName, bool pManualMap)
+void Console::PrintDLLPage(PageProcess* pPagesManager, std::string_view pDLLName, bool pManualMap)
 {
 	PrintHeaderDLL();
 	PrintBodyDLL(pDLLName, pPagesManager, pManualMap);
@@ -99,12 +99,12 @@ void Console::PrintHeaderDLL()
 	std::cout << "---------------------------------------------------------------------------------- \n";
 }
 
-void Console::PrintBodyDLL(std::string_view pDLLName, PagesManager* pPagesManager, bool pManualMap)
+void Console::PrintBodyDLL(std::string_view pDLLName, PageProcess* pPagesManager, bool pManualMap)
 {
 	std::string_view dllOutput{ "[!] Please insert a DLL file and press [F5] (REFRESH)." };
 	std::string_view injecType{ "LoadLibraryA" };
 
-	std::wstring nameProc{ pPagesManager->GetUserProcess() };
+	std::wstring nameProc{ pPagesManager->GetUserProcName() };
 	std::map<std::wstring, DWORD> procMap{ pPagesManager->GetProcessMap() };
 
 	if (!pDLLName.empty()) dllOutput = pDLLName;
