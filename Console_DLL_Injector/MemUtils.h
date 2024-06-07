@@ -64,7 +64,7 @@ public:
 
 using t_LoadLibraryA    = HINSTANCE(WINAPI*)(const char* lpLibFilename);
 using t_GetProcAddress  = UINT_PTR(WINAPI*)(HINSTANCE hModule, const char* lpProcName);
-using t_DLL_ENTRY_POINT = BOOL(WINAPI*)(void* hDll, DWORD dwReason, void* pReserved);
+using t_DLL_ENTRY_POINT = BOOL(WINAPI*)(HINSTANCE hDll, DWORD dwReason, void* pReserved);
 
 struct DataImport
 {

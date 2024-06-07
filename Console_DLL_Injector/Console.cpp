@@ -119,7 +119,6 @@ void Console::PrintBodyDLL(std::string_view pDLLName, PageProcess* pPagesManager
 void Console::PrintFooterDLL()
 {
 	std::cout << "---------------------------------------------------------------------------------- \n";
-	std::cout << "---------------------------------------------------------------------------------- \n";
 	std::cout << "[+] ------------->> [ [F1] to go BACK to the process list ] <<-------------------- \n";
 }
 

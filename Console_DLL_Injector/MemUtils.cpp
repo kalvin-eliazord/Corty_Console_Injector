@@ -176,7 +176,8 @@ bool MemUtils::DllMap()
 	{
 		this->memAllocProc = reinterpret_cast<BYTE*>(VirtualAllocEx(
 			this->dataProc.hProc,
-			nullptr, this->pe_head.opt->SizeOfImage,
+			nullptr,
+			this->pe_head.opt->SizeOfImage,
 			MEM_RESERVE | MEM_COMMIT,
 			PAGE_EXECUTE_READWRITE));
 
@@ -196,7 +197,8 @@ bool MemUtils::DllMap()
 
 		auto* currAddr{ reinterpret_cast<intptr_t*>(this->memAllocProc + currSection->VirtualAddress) };
 		auto* currData{ reinterpret_cast<intptr_t*>(this->dataDll.buffer + currSection->PointerToRawData) };
-		if (!WriteProcessMemory(this->dataProc.hProc, currAddr, currData, currSection->SizeOfRawData, nullptr))
+		SIZE_T* bytesW{nullptr};
+		if (!WriteProcessMemory(this->dataProc.hProc, currAddr, currData, currSection->SizeOfRawData, bytesW) || !bytesW)
 		{
 			std::cerr << "[-] Cannot map DLL sections into the target process. \n";
 			VirtualFreeEx(this->dataProc.hProc, this->memAllocProc, 0, MEM_RELEASE);
@@ -225,7 +227,7 @@ bool PE_Header::Init(BYTE* pModBase)
 #ifdef _WIN64
 	if (this->file->Machine != IMAGE_FILE_MACHINE_AMD64)
 	{
-		std::cerr << "[-] [-] This is not a Windows DLL. \n";
+		std::cerr << "[-] This is not a Windows DLL. \n";
 		return false;
 	}
 #else
@@ -319,7 +321,7 @@ void ShellLoader(DataImport* pDataImport)
 	CallEntryPoint(modBase, pDataImport, optHeader);
 }
 
-void RelocationImport(BYTE* pModBase, IMAGE_OPTIONAL_HEADER* pOptHeader)
+inline void RelocationImport(BYTE* pModBase, IMAGE_OPTIONAL_HEADER* pOptHeader)
 {
 	BYTE* relativePrefAddr{ pModBase - pOptHeader->ImageBase };
 	if (!relativePrefAddr) return;
@@ -343,7 +345,7 @@ void RelocationImport(BYTE* pModBase, IMAGE_OPTIONAL_HEADER* pOptHeader)
 	}
 }
 
-void FixImports(BYTE* pModBase, DataImport* pDataImport, IMAGE_OPTIONAL_HEADER* pOptHeader)
+inline void FixImports(BYTE* pModBase, DataImport* pDataImport, IMAGE_OPTIONAL_HEADER* pOptHeader)
 {
 	if (!pOptHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].Size) return;
 	auto* importDesc{ reinterpret_cast<IMAGE_IMPORT_DESCRIPTOR*>(pModBase + pOptHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress) };
@@ -376,7 +378,7 @@ void FixImports(BYTE* pModBase, DataImport* pDataImport, IMAGE_OPTIONAL_HEADER* 
 	}
 }
 
-void TLS_Import(BYTE* pModBase, IMAGE_OPTIONAL_HEADER* pOptHeader)
+inline void TLS_Import(BYTE* pModBase, IMAGE_OPTIONAL_HEADER* pOptHeader)
 {
 	if (!pOptHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_TLS].Size)
 		return;
@@ -387,9 +389,9 @@ void TLS_Import(BYTE* pModBase, IMAGE_OPTIONAL_HEADER* pOptHeader)
 		(*callBack)(pModBase, DLL_PROCESS_ATTACH, nullptr);
 }
 
-void CallEntryPoint(BYTE* pModBase, DataImport* pDataImport, IMAGE_OPTIONAL_HEADER* pOptHeader)
+inline void CallEntryPoint(BYTE* pModBase, DataImport* pDataImport, IMAGE_OPTIONAL_HEADER* pOptHeader)
 {
 	auto _DllMain{ reinterpret_cast<t_DLL_ENTRY_POINT>(pModBase + pOptHeader->AddressOfEntryPoint) };
-	_DllMain(pModBase, DLL_PROCESS_ATTACH, nullptr);
+	(*_DllMain)(reinterpret_cast<HINSTANCE>(pModBase), DLL_PROCESS_ATTACH, nullptr);
 	pDataImport->hMod = reinterpret_cast<HINSTANCE>(pModBase);
 }
