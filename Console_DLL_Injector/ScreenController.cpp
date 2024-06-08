@@ -26,7 +26,7 @@ void ScreenController::RunDLLPage(PageProcess* pPagesManager, MemUtils* pMemUtil
 	{
 		if (bManualMap)
 		{
-			if (pMemUtils->ManualMap_Start())
+			if(pMemUtils->ManualMap_Start())
 				Console::PrintDLLInjected(pPagesManager->GetUserProcName(), pMemUtils->dataDll.name);
 		}
 		else

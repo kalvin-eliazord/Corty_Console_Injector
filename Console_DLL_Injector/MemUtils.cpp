@@ -89,8 +89,8 @@ bool MemUtils::WinAPI_Inject_Start()
 		return false;
 	}
 
-	SIZE_T bytesWritten;
-	if (!WriteProcessMemory(this->dataProc.hProc, memAlloc, this->dataDll.path.c_str(), strlen(this->dataDll.path.c_str()) + 1, &bytesWritten) || !bytesWritten)
+	SIZE_T bytesWritten{ 0 };
+	if (!WriteProcessMemory(this->dataProc.hProc, memAlloc, this->dataDll.path.c_str(), strlen(this->dataDll.path.c_str()) + 1, &bytesWritten) || bytesWritten == 0)
 	{
 		std::cerr << "[!] Failed to write process memory. Error: \n" << GetLastError();
 		VirtualFreeEx(this->dataProc.hProc, memAlloc, 0, MEM_RELEASE);
@@ -118,11 +118,22 @@ bool MemUtils::WinAPI_Inject_Start()
 
 void _stdcall ShellLoader(DataImport* pDataImport);
 
+#if defined(DISABLE_OUTPUT)
+#define ILog(data, ...)
+#else
+#define ILog(text, ...) printf(text, __VA_ARGS__);
+#endif
+
+#ifdef _WIN64
+#define CURRENT_ARCH IMAGE_FILE_MACHINE_AMD64
+#else
+#define CURRENT_ARCH IMAGE_FILE_MACHINE_I386
+#endif
+
 bool MemUtils::ManualMap_Start()
 {
 	if (!DllMap()) return false;
-	if (!ImportMap()) return false;
-	if (!ShellCodeMap()) return false;
+	if (!ImportAndShellCodeMap()) return false;
 
 	return true;
 }
@@ -145,7 +156,7 @@ bool MemUtils::DllMap()
 		return false;
 	}
 
-	this->dataDll.buffer = new BYTE[this->dataDll.fSize];
+	this->dataDll.buffer = new BYTE[(UINT_PTR)this->dataDll.fSize];
 	if (!this->dataDll.buffer)
 	{
 		std::cerr << "[-] Cannot initialize DLL buffer. \n";
@@ -170,7 +181,7 @@ bool MemUtils::DllMap()
 		&this->pe_head.opt->ImageBase,
 		this->pe_head.opt->SizeOfImage,
 		MEM_RESERVE | MEM_COMMIT,
-		PAGE_EXECUTE_READWRITE));
+		PAGE_READWRITE));
 
 	if (!this->memAllocProc)
 	{
@@ -179,7 +190,7 @@ bool MemUtils::DllMap()
 			nullptr,
 			this->pe_head.opt->SizeOfImage,
 			MEM_RESERVE | MEM_COMMIT,
-			PAGE_EXECUTE_READWRITE));
+			PAGE_READWRITE));
 
 		if (!this->memAllocProc)
 		{
@@ -189,7 +200,18 @@ bool MemUtils::DllMap()
 		}
 	}
 
-	auto* currSection{  IMAGE_FIRST_SECTION(this->pe_head.nt) };
+	DWORD oldp = 0;
+	VirtualProtectEx(this->dataProc.hProc, this->memAllocProc, this->pe_head.opt->SizeOfImage, PAGE_EXECUTE_READWRITE, &oldp);
+
+	// PE Header mapping
+	if (!WriteProcessMemory(this->dataProc.hProc, this->memAllocProc, this->dataDll.buffer, 0x1000, nullptr)) { 
+		ILog("Can't write file header 0x%X\n", GetLastError());
+		VirtualFreeEx(this->dataProc.hProc, this->memAllocProc, 0, MEM_RELEASE);
+		delete[] this->dataDll.buffer;
+		return false;
+	}
+
+	auto* currSection{ IMAGE_FIRST_SECTION(this->pe_head.nt) };
 	for (UINT i{ 0 }; i < this->pe_head.file->NumberOfSections; ++currSection, ++i)
 	{
 		if (!currSection->SizeOfRawData)
@@ -197,8 +219,8 @@ bool MemUtils::DllMap()
 
 		auto* currAddr{ reinterpret_cast<intptr_t*>(this->memAllocProc + currSection->VirtualAddress) };
 		auto* currData{ reinterpret_cast<intptr_t*>(this->dataDll.buffer + currSection->PointerToRawData) };
-		SIZE_T* bytesW{nullptr};
-		if (!WriteProcessMemory(this->dataProc.hProc, currAddr, currData, currSection->SizeOfRawData, bytesW) || !bytesW)
+		SIZE_T bytesW{ 0 };
+		if (!WriteProcessMemory(this->dataProc.hProc, currAddr, currData, currSection->SizeOfRawData, &bytesW) || bytesW == 0)
 		{
 			std::cerr << "[-] Cannot map DLL sections into the target process. \n";
 			VirtualFreeEx(this->dataProc.hProc, this->memAllocProc, 0, MEM_RELEASE);
@@ -211,16 +233,16 @@ bool MemUtils::DllMap()
 	return true;
 }
 
-bool PE_Header::Init(BYTE* pModBase)
+bool PE_Header::Init(BYTE* pBase)
 {
 	constexpr int valid_EXE_id{ 0x5A4D };
-	if (reinterpret_cast<IMAGE_DOS_HEADER*>(pModBase)->e_magic != valid_EXE_id)
+	if (reinterpret_cast<IMAGE_DOS_HEADER*>(pBase)->e_magic != valid_EXE_id)
 	{
 		std::cerr << "[-] The module is not a valid executable. \n";
 		return false;
 	}
 
-	this->nt = reinterpret_cast<IMAGE_NT_HEADERS*>(pModBase + reinterpret_cast<IMAGE_DOS_HEADER*>(pModBase)->e_lfanew);
+	this->nt = reinterpret_cast<IMAGE_NT_HEADERS*>(pBase + reinterpret_cast<IMAGE_DOS_HEADER*>(pBase)->e_lfanew);
 	this->opt = &nt->OptionalHeader;
 	this->file = &nt->FileHeader;
 
@@ -241,157 +263,210 @@ bool PE_Header::Init(BYTE* pModBase)
 	return true;
 }
 
-bool MemUtils::ImportMap()
+bool MemUtils::ImportAndShellCodeMap()
 {
-	// Init Import Data
-	DataImport dataImport{ 0 };
-	dataImport._LoadLibraryA = LoadLibraryA;
-	dataImport._GetProcAddress = reinterpret_cast<t_GetProcAddress>(GetProcAddress);
+	auto& hProc = this->dataProc.hProc;
+	auto& pSrcData = this->dataDll.buffer;
+	auto& pTargetBase = this->memAllocProc;
 
-	memcpy(this->dataDll.buffer, &dataImport, sizeof(DataImport));
-	if (!WriteProcessMemory(this->dataProc.hProc, this->memAllocProc, this->dataDll.buffer, 0x1000, nullptr))
-	{
-		std::cerr << "[-] Cannot write Import data into the target process. \n";
-		VirtualFreeEx(this->dataProc.hProc, this->memAllocProc, 0, MEM_RELEASE);
-		delete[] this->dataDll.buffer;
+	// START IMPORT MAPPING
+	DataImport data{ 0 };
+	data._LoadLibraryA = LoadLibraryA;
+	data._GetProcAddress = GetProcAddress;
+	data.pbase = pTargetBase;
+
+	BYTE* MappingDataAlloc = reinterpret_cast<BYTE*>(VirtualAllocEx(hProc, nullptr, sizeof(DataImport), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
+	if (!MappingDataAlloc) {
+		ILog("Target process mapping allocation failed (ex) 0x%X\n", GetLastError());
+		VirtualFreeEx(hProc, pTargetBase, 0, MEM_RELEASE);
 		return false;
 	}
 
-	delete[] this->dataDll.buffer;
-	std::cout << "[+] Imports mapped. \n";
-	return true;
-}
+	if (!WriteProcessMemory(hProc, MappingDataAlloc, &data, sizeof(DataImport), nullptr)) {
+		ILog("Can't write mapping 0x%X\n", GetLastError());
+		VirtualFreeEx(hProc, pTargetBase, 0, MEM_RELEASE);
+		VirtualFreeEx(hProc, MappingDataAlloc, 0, MEM_RELEASE);
+		return false;
+	}
+	//END Mapping params
 
-bool MemUtils::ShellCodeMap()
-{
-	void* memAllocShell{ VirtualAllocEx(this->dataProc.hProc, nullptr, 0x1000, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE) };
-	if (!memAllocShell)
-	{
-		std::cerr << "[-] Cannot allocate memory for the shellcode. \n";
-		VirtualFreeEx(this->dataProc.hProc, this->memAllocProc, 0, MEM_RELEASE);
+	//START Shell code
+	void* pShellcode = VirtualAllocEx(hProc, nullptr, 0x1000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	if (!pShellcode) {
+		ILog("Memory shellcode allocation failed (ex) 0x%X\n", GetLastError());
+		VirtualFreeEx(hProc, pTargetBase, 0, MEM_RELEASE);
+		VirtualFreeEx(hProc, MappingDataAlloc, 0, MEM_RELEASE);
 		return false;
 	}
 
-	if (!WriteProcessMemory(this->dataProc.hProc, memAllocShell, ShellLoader, 0x1000, nullptr))
-	{
-		std::cerr << "[-] Cannot map the shellcode into the target process. \n";
-		VirtualFreeEx(this->dataProc.hProc, memAllocShell, 0, MEM_RELEASE);
-		VirtualFreeEx(this->dataProc.hProc, this->memAllocProc, 0, MEM_RELEASE);
+	if (!WriteProcessMemory(hProc, pShellcode, ShellLoader, 0x1000, nullptr)) {
+		ILog("Can't write shellcode 0x%X\n", GetLastError());
+		VirtualFreeEx(hProc, pTargetBase, 0, MEM_RELEASE);
+		VirtualFreeEx(hProc, MappingDataAlloc, 0, MEM_RELEASE);
+		VirtualFreeEx(hProc, pShellcode, 0, MEM_RELEASE);
 		return false;
 	}
 
-	HANDLE hThread{ CreateRemoteThread(this->dataProc.hProc, nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(memAllocShell), this->memAllocProc, 0, nullptr) };
-	if (!hThread)
-	{
-		std::cerr << "[-] Shellcode's thread failed to initialize. \n";
-		VirtualFreeEx(this->dataProc.hProc, memAllocShell, 0, MEM_RELEASE);
-		VirtualFreeEx(this->dataProc.hProc, this->memAllocProc, 0, MEM_RELEASE);
+	ILog("Mapped DLL at %p\n", pTargetBase);
+	ILog("Mapping info at %p\n", MappingDataAlloc);
+	ILog("Shell code at %p\n", pShellcode);
+
+	ILog("Data allocated\n");
+
+#ifdef _DEBUG
+	ILog("My shellcode pointer %p\n", ShellLoader);
+	ILog("Target point %p\n", pShellcode);
+	system("pause");
+#endif
+
+	HANDLE hThread = CreateRemoteThread(hProc, nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(pShellcode), MappingDataAlloc, 0, nullptr);
+	if (!hThread) {
+		ILog("Thread creation failed 0x%X\n", GetLastError());
+		VirtualFreeEx(hProc, pTargetBase, 0, MEM_RELEASE);
+		VirtualFreeEx(hProc, MappingDataAlloc, 0, MEM_RELEASE);
+		VirtualFreeEx(hProc, pShellcode, 0, MEM_RELEASE);
 		return false;
 	}
+	CloseHandle(hThread);
+	//END Shell code
 
-	std::cout << "[+] Shellcode mapped. \n";
+	ILog("Thread created at: %p, waiting for return...\n", pShellcode);
 
-	HINSTANCE hModCheck{ NULL };
-	while (!hModCheck)
-	{
-		DataImport dataCheck{ 0 };
-		ReadProcessMemory(this->dataProc.hProc, this->memAllocProc, &dataCheck, sizeof(dataCheck), nullptr);
-		hModCheck = dataCheck.hMod;
-		std::cout << "[+] Checking... \r";
+	HINSTANCE hCheck = NULL;
+	while (!hCheck) {
+		DWORD exitcode = 0;
+		GetExitCodeProcess(hProc, &exitcode);
+		if (exitcode != STILL_ACTIVE) {
+			ILog("Process crashed, exit code: %d\n", exitcode);
+			return false;
+		}
+
+		DataImport data_checked{ 0 };
+		ReadProcessMemory(hProc, MappingDataAlloc, &data_checked, sizeof(data_checked), nullptr);
+		hCheck = data_checked.hMod;
+
+		if (hCheck == (HINSTANCE)0x404040) {
+			ILog("Wrong mapping ptr\n");
+			VirtualFreeEx(hProc, pTargetBase, 0, MEM_RELEASE);
+			VirtualFreeEx(hProc, MappingDataAlloc, 0, MEM_RELEASE);
+			VirtualFreeEx(hProc, pShellcode, 0, MEM_RELEASE);
+			return false;
+		}
+		else if (hCheck == (HINSTANCE)0x505050) {
+			ILog("WARNING: Exception support failed!\n");
+		}
+
 		Sleep(10);
 	}
 
-	std::cout << "[+] Checking done. \t";
+	//CLEAR PE HEAD (optional)
+	BYTE* emptyBuffer = (BYTE*)malloc(1024 * 1024 * 20);
+	if (emptyBuffer == nullptr) {
+		ILog("Unable to allocate memory\n");
+		return false;
+	}
+	memset(emptyBuffer, 0, 1024 * 1024 * 20);
 
-	VirtualFreeEx(this->dataProc.hProc, memAllocShell, 0, MEM_RELEASE);
-	CloseHandle(hThread);
+	if (!WriteProcessMemory(hProc, pShellcode, emptyBuffer, 0x1000, nullptr)) {
+		ILog("WARNING: Can't clear shellcode\n");
+	}
+	if (!VirtualFreeEx(hProc, pShellcode, 0, MEM_RELEASE)) {
+		ILog("WARNING: can't release shell code memory\n");
+	}
+	if (!VirtualFreeEx(hProc, MappingDataAlloc, 0, MEM_RELEASE)) {
+		ILog("WARNING: can't release mapping data memory\n");
+	}
+
 	return true;
 }
 
-void ShellLoader(DataImport* pDataImport)
+#define RELOC_FLAG32(RelInfo) ((RelInfo >> 0x0C) == IMAGE_REL_BASED_HIGHLOW)
+#define RELOC_FLAG64(RelInfo) ((RelInfo >> 0x0C) == IMAGE_REL_BASED_DIR64)
+
+#ifdef _WIN64
+#define RELOC_FLAG RELOC_FLAG64
+#else
+#define RELOC_FLAG RELOC_FLAG32
+#endif
+
+#pragma runtime_checks( "", off )
+#pragma optimize( "", off )
+void _stdcall ShellLoader(DataImport* pDataImport)
 {
-	if (!pDataImport) return;
-
-	BYTE* modBase{ reinterpret_cast<BYTE*>(pDataImport) };
-	auto* optHeader{ &reinterpret_cast<IMAGE_NT_HEADERS*>(modBase + reinterpret_cast<IMAGE_DOS_HEADER*>(modBase)->e_lfanew)->OptionalHeader };
-
-	RelocationImport(modBase, optHeader);
-	FixImports(modBase, pDataImport, optHeader);
-	TLS_Import(modBase, optHeader);
-	CallEntryPoint(modBase, pDataImport, optHeader);
-}
-
-inline void RelocationImport(BYTE* pModBase, IMAGE_OPTIONAL_HEADER* pOptHeader)
-{
-	BYTE* relativePrefAddr{ pModBase - pOptHeader->ImageBase };
-	if (!relativePrefAddr) return;
-
-	auto* relocBase{ reinterpret_cast<IMAGE_BASE_RELOCATION*>(pModBase + pOptHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC].VirtualAddress) };
-
-	while (relocBase->VirtualAddress)
+	if (!pDataImport)
 	{
-		const UINT maxEntries{ (relocBase->SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION)) / sizeof(WORD) };
-
-		WORD* relocEntry{ reinterpret_cast<WORD*>(relocBase) + 1 };
-		for (UINT i{ 0 }; i < maxEntries; ++i, ++relocEntry)
-		{
-			if (!RELOC_FLAG(*relocEntry)) continue;
-
-			const UINT_PTR relocRVA{ static_cast<UINT_PTR>(((*relocEntry) & 0xFFF)) };
-			UINT_PTR* relocEntryAddr{ reinterpret_cast<UINT_PTR*>(pModBase + relocBase->VirtualAddress + relocRVA) };
-			*relocEntryAddr += reinterpret_cast<UINT_PTR>(relativePrefAddr);
-		}
-		relocBase = reinterpret_cast<IMAGE_BASE_RELOCATION*>(reinterpret_cast<BYTE*>(relocBase) + relocBase->SizeOfBlock);
-	}
-}
-
-inline void FixImports(BYTE* pModBase, DataImport* pDataImport, IMAGE_OPTIONAL_HEADER* pOptHeader)
-{
-	if (!pOptHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].Size) return;
-	auto* importDesc{ reinterpret_cast<IMAGE_IMPORT_DESCRIPTOR*>(pModBase + pOptHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress) };
-
-	auto _LoadLibA{ pDataImport->_LoadLibraryA };
-	auto _GetProcAddr{ pDataImport->_GetProcAddress };
-
-	while (importDesc->Name)
-	{
-		HINSTANCE hMod{ _LoadLibA(reinterpret_cast<char*>(pModBase + importDesc->Name)) };
-
-		ULONG_PTR* IAT{ reinterpret_cast<ULONG_PTR*>(pModBase + importDesc->OriginalFirstThunk) };
-		ULONG_PTR* ILT{ reinterpret_cast<ULONG_PTR*>(pModBase + importDesc->FirstThunk) };
-
-		if (!IAT) IAT = ILT;
-
-		for (; *IAT; ++IAT, ++ILT)
-		{
-			if (IMAGE_SNAP_BY_ORDINAL(*IAT))
-			{
-				*ILT = _GetProcAddr(hMod, reinterpret_cast<char*>(*IAT & 0xFFFF));
-			}
-			else
-			{
-				auto* importName{ reinterpret_cast<IMAGE_IMPORT_BY_NAME*>(pModBase + *IAT) };
-				*ILT = _GetProcAddr(hMod, importName->Name);
-			}
-		}
-		++importDesc;
-	}
-}
-
-inline void TLS_Import(BYTE* pModBase, IMAGE_OPTIONAL_HEADER* pOptHeader)
-{
-	if (!pOptHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_TLS].Size)
+		pDataImport->hMod = (HINSTANCE)0x404040;
 		return;
+	}
 
-	auto* tlsBase{ reinterpret_cast<IMAGE_TLS_DIRECTORY*>(pModBase + pOptHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_TLS].VirtualAddress) };
-	auto* callBack{ reinterpret_cast<PIMAGE_TLS_CALLBACK*>(tlsBase->AddressOfCallBacks) };
-	for (; callBack && *callBack; ++callBack)
-		(*callBack)(pModBase, DLL_PROCESS_ATTACH, nullptr);
-}
+	auto* pBase{ pDataImport->pbase };
+	IMAGE_OPTIONAL_HEADER* pOpt{ &reinterpret_cast<IMAGE_NT_HEADERS*>(pBase + reinterpret_cast<IMAGE_DOS_HEADER*>(pBase)->e_lfanew)->OptionalHeader };
 
-inline void CallEntryPoint(BYTE* pModBase, DataImport* pDataImport, IMAGE_OPTIONAL_HEADER* pOptHeader)
-{
-	auto _DllMain{ reinterpret_cast<t_DLL_ENTRY_POINT>(pModBase + pOptHeader->AddressOfEntryPoint) };
-	(*_DllMain)(reinterpret_cast<HINSTANCE>(pModBase), DLL_PROCESS_ATTACH, nullptr);
-	pDataImport->hMod = reinterpret_cast<HINSTANCE>(pModBase);
+	// Relocation
+	BYTE* relativePrefAddr{ pBase - pOpt->ImageBase };
+	if (relativePrefAddr && pOpt->DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC].Size)
+	{
+		auto* relocBase{ reinterpret_cast<IMAGE_BASE_RELOCATION*>(pBase + pOpt->DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC].VirtualAddress) };
+		while (relocBase->VirtualAddress)
+		{
+			const UINT maxEntries{ (relocBase->SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION)) / sizeof(WORD) };
+			WORD* relocEntry{ reinterpret_cast<WORD*>(relocBase + 1) };
+			for (UINT i{ 0 }; i < maxEntries; ++i, ++relocEntry)
+			{
+				if (!RELOC_FLAG(*relocEntry)) continue;
+
+				const WORD relocRVA{ static_cast<WORD>(*relocEntry & 0xFFF) };
+				UINT_PTR* relocEntryAddr{ reinterpret_cast<UINT_PTR*>(pBase + relocBase->VirtualAddress + relocRVA) };
+				*relocEntryAddr += reinterpret_cast<UINT_PTR>(relativePrefAddr);
+			}
+			relocBase = reinterpret_cast<IMAGE_BASE_RELOCATION*>(reinterpret_cast<BYTE*>(relocBase) + relocBase->SizeOfBlock);
+		}
+	}
+
+	// Import fixing
+	if (pOpt->DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].Size)
+	{
+		auto* importDesc{ reinterpret_cast<IMAGE_IMPORT_DESCRIPTOR*>(pBase + pOpt->DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress) };
+
+		auto _LoadLibA{ pDataImport->_LoadLibraryA };
+		auto _GetProcAddr{ pDataImport->_GetProcAddress };
+
+		while (importDesc->Name)
+		{
+			HINSTANCE hMod{ _LoadLibA(reinterpret_cast<char*>(pBase + importDesc->Name)) };
+
+			ULONG_PTR* IAT{ reinterpret_cast<ULONG_PTR*>(pBase + importDesc->OriginalFirstThunk) };
+			ULONG_PTR* ILT{ reinterpret_cast<ULONG_PTR*>(pBase + importDesc->FirstThunk) };
+
+			if (!IAT) IAT = ILT;
+
+			for (; *IAT; ++IAT, ++ILT)
+			{
+				if (IMAGE_SNAP_BY_ORDINAL(*IAT))
+				{
+					*ILT = (ULONG_PTR)_GetProcAddr(hMod, reinterpret_cast<char*>(*IAT & 0xFFFF));
+				}
+				else
+				{
+					auto* importName{ reinterpret_cast<IMAGE_IMPORT_BY_NAME*>(pBase + *IAT) };
+					*ILT = (ULONG_PTR)_GetProcAddr(hMod, importName->Name);
+				}
+			}
+			++importDesc;
+		}
+	}
+
+	// Callback executing
+	if (pOpt->DataDirectory[IMAGE_DIRECTORY_ENTRY_TLS].Size)
+	{
+		auto* tlsBase{ reinterpret_cast<IMAGE_TLS_DIRECTORY*>(pBase + pOpt->DataDirectory[IMAGE_DIRECTORY_ENTRY_TLS].VirtualAddress) };
+		auto* callBack{ reinterpret_cast<PIMAGE_TLS_CALLBACK*>(tlsBase->AddressOfCallBacks) };
+		for (; callBack && *callBack; ++callBack)
+			(*callBack)(pBase, pDataImport->fdwReasonParam, pDataImport->reservedParam);
+	}
+
+	// Entry point calling
+	auto _DllMain{ reinterpret_cast<t_DLL_ENTRY_POINT>(pBase + pOpt->AddressOfEntryPoint) };
+	_DllMain(pDataImport->pbase, DLL_PROCESS_ATTACH, nullptr);
+	pDataImport->hMod = reinterpret_cast<HINSTANCE>(pDataImport->pbase);
 }

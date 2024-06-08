@@ -18,7 +18,7 @@ int main()
 		std::cerr << "[!] No process found.";
 		system("PAUSE");
 		return -1;
-	} 
+	}
 
 	PageProcess pagesManager(procEntryList);
 	ScreenController screenManager;
@@ -35,6 +35,11 @@ int main()
 
 		Sleep(5);
 	}
+
+	if(memUtils.dataProc.hProc)
+		CloseHandle(memUtils.dataProc.hProc);
+
+	delete[] memUtils.dataDll.buffer;
 
 	return 0;
 }
