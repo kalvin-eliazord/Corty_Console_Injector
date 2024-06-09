@@ -1,15 +1,9 @@
 # Corty Console Injector
-A console app that will scan all process and inject into the selected one a DLL with the LoadLibraryA function.
+A console app that will scan all process and inject your DLL into the selected one.
 
 ## Features
-- Process Page
-  - Go to next / previous page
-  - Select process
-  - Refresh screen
-- DLL Page 
-  - Inject Dll
-  - Refresh screen
-  - Go back to process page
+- LoadLibraryA
+- Manual Mapping
 
 # How to use it?
 - Compile it for your process target architecture (x86/x64)
@@ -21,9 +15,7 @@ A console app that will scan all process and inject into the selected one a DLL 
 ![image](https://github.com/kalvin-eliazord/Console_DLL_Injector/assets/61147281/be9413b7-05e9-4169-87e9-02ced7839f24)
 
 ## Known-Issue:
-- The program miss one page of process to print
-
+- The program miss one page of process printing
 ## To-do:
-- Finish to implement manual mapping
 - Make program more robust
-- Implement a real UI
+- Improve UI (alphabetical process order, colors)
