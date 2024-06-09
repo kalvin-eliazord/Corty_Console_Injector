@@ -11,7 +11,7 @@ A console app that will scan all process and inject your DLL into the selected o
 - [F6] to be able to write the ID of a process you want to, press ENTER
 - [F6] again to inject the DLL into the selected process
 
-## Console Preview
+## Preview
 ![image](https://github.com/kalvin-eliazord/Console_DLL_Injector/assets/61147281/be9413b7-05e9-4169-87e9-02ced7839f24)
 
 ## Known-Issue:
