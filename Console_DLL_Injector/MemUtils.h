@@ -9,21 +9,25 @@
 #include <direct.h> 
 #include "PageProcess.h"
 
-//#define RELOC_FLAG32(RelInfo) ((RelInfo >> 0x0C) == IMAGE_REL_BASED_HIGHLOW)
-//#define RELOC_FLAG64(RelInfo) ((RelInfo >> 0x0C) == IMAGE_REL_BASED_DIR64)
-//
-//#ifdef _WIN64
-//#define RELOC_FLAG RELOC_FLAG64
-//#else
-//#define RELOC_FLAG RELOC_FLAG32
-//#endif
+#define RELOC_FLAG32(RelInfo) ((RelInfo >> 0x0C) == IMAGE_REL_BASED_HIGHLOW)
+#define RELOC_FLAG64(RelInfo) ((RelInfo >> 0x0C) == IMAGE_REL_BASED_DIR64)
+
+#ifdef _WIN64
+#define RELOC_FLAG RELOC_FLAG64
+#else
+#define RELOC_FLAG RELOC_FLAG32
+#endif
+
+#ifdef _WIN64
+#define CURRENT_ARCH IMAGE_FILE_MACHINE_AMD64
+#else
+#define CURRENT_ARCH IMAGE_FILE_MACHINE_I386
+#endif
 
 struct DataDLL
 {
 	std::string path{};
 	std::string name{};
-	uintptr_t fSize{};
-	BYTE* buffer{};
 	bool isWow64{};
 };
 
@@ -47,7 +51,7 @@ class MemUtils
 public:
 	bool DllMap();
 	bool ImportAndShellCodeMap();
-	BYTE* memAllocProc{ nullptr };
+	BYTE* mAllocProc{ nullptr };
 	DataProc dataProc;
 	DataDLL dataDll;
 	PE_Header pe_head;
@@ -57,6 +61,7 @@ public:
 	std::string GetCurrDirectory();
 	bool WinAPI_Inject_Start();
 	bool ManualMap_Start();
+	bool WriteMem(auto* pSrc, auto* pDst, auto pSize);
 	std::vector<PROCESSENTRY32> GetProcList();
 };
 
@@ -68,7 +73,7 @@ struct DataImport
 {
 	t_LoadLibraryA _LoadLibraryA{};
 	t_GetProcAddress _GetProcAddress{};
-	BYTE* pbase;
+	BYTE* baseAddr;
 	HINSTANCE hMod{};
 	DWORD fdwReasonParam{ DLL_PROCESS_ATTACH };
 	LPVOID reservedParam{ nullptr };

@@ -124,5 +124,5 @@ void Console::PrintFooterDLL()
 
 void Console::PrintDLLInjected(std::wstring_view pProcKeyChosen, std::string_view pDLLName)
 {
-	std::cout << "[+] The DLL \"" << pDLLName << "\" is loaded into "; std::wcout << pProcKeyChosen << " process! \n";
+	std::cout << "[+] The DLL \"" << pDLLName << "\" is loaded into the "; std::wcout << pProcKeyChosen << " process.\n";
 }

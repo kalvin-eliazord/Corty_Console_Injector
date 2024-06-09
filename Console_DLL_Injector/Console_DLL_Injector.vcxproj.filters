@@ -1,53 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="View">
-      <UniqueIdentifier>{b990aa58-53f5-400b-8d88-5b630b5c9d92}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="View\ConsolePrinter">
-      <UniqueIdentifier>{fd96062c-0f25-495a-8312-cfacb03fc0ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model">
-      <UniqueIdentifier>{b2f4e61a-eac8-4c47-8755-c10e4c9bc986}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\MemoryUtils">
+    <Filter Include="MemoryUtils">
       <UniqueIdentifier>{53116569-591c-4c21-a8de-5b27743f464e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Controller">
+    <Filter Include="ConsolePrinter">
+      <UniqueIdentifier>{fd96062c-0f25-495a-8312-cfacb03fc0ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PageProc">
+      <UniqueIdentifier>{a1a7c3e1-031e-47e0-89c9-d5207d7e8b4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScreenController">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Model\PageProcess">
-      <UniqueIdentifier>{3dafc1bd-d9a7-433e-ab99-fa8053c6e44e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Console.cpp">
-      <Filter>View\ConsolePrinter</Filter>
+      <Filter>ConsolePrinter</Filter>
     </ClCompile>
     <ClCompile Include="MemUtils.cpp">
-      <Filter>Model\MemoryUtils</Filter>
-    </ClCompile>
-    <ClCompile Include="PageProcess.cpp">
-      <Filter>Model\PageProcess</Filter>
+      <Filter>MemoryUtils</Filter>
     </ClCompile>
     <ClCompile Include="ScreenController.cpp">
-      <Filter>Controller</Filter>
+      <Filter>ScreenController</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PageProcess.cpp">
+      <Filter>PageProc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ScreenController.h">
-      <Filter>Controller</Filter>
+      <Filter>ScreenController</Filter>
     </ClInclude>
     <ClInclude Include="Console.h">
-      <Filter>View\ConsolePrinter</Filter>
+      <Filter>ConsolePrinter</Filter>
     </ClInclude>
     <ClInclude Include="MemUtils.h">
-      <Filter>Model\MemoryUtils</Filter>
+      <Filter>MemoryUtils</Filter>
     </ClInclude>
     <ClInclude Include="PageProcess.h">
-      <Filter>Model\PageProcess</Filter>
+      <Filter>PageProc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

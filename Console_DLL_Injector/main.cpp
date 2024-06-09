@@ -7,7 +7,7 @@
 
 int main()
 {
-	SetConsoleTitle(L"Corty Injector");
+	SetConsoleTitle(L"Corty Console Injector");
 
 	// Get process entries
 	MemUtils memUtils{};
@@ -15,7 +15,7 @@ int main()
 
 	if (procEntryList.empty())
 	{
-		std::cerr << "[!] No process found.";
+		std::cerr << "[!] No process found.\n";
 		system("PAUSE");
 		return -1;
 	}
@@ -38,8 +38,6 @@ int main()
 
 	if(memUtils.dataProc.hProc)
 		CloseHandle(memUtils.dataProc.hProc);
-
-	delete[] memUtils.dataDll.buffer;
 
 	return 0;
 }
